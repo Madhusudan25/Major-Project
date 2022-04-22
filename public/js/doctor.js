@@ -3,7 +3,18 @@
 
 import { App } from "./loginWithMetamask.js";
 
+$(() => {
+  $(window).load(async () => {
+    await App.load();
+    verifyAccount();
+  });
+});
+
 function verifyAccount() {
+  if(window.ethereum.selectedAddress==null){
+    alert("Select the Metamask Address before proceeding");
+    return;
+  }
   $.ajax({
     url: "/doctor/verify",
     type: "post",
@@ -11,18 +22,30 @@ function verifyAccount() {
     success: function (d) {
       console.log("Success");
       console.log(d.doctorData);
+      $("#accessMsg").hide();
+      $("#content").attr("hidden",false);
+      displayContent(d.doctorData);
     },
     error: function (request, status, error) {
-      console.log(status);
-      console.log(error);
+      $("#content").attr("hidden",true)
+      $("#accessMsg").show();
       alert(request.responseText);
     },
   });
 }
 
-$(() => {
-  $(window).load(() => {
-    App.load();
-    verifyAccount();
-  });
-});
+
+function displayContent(patients){
+  if(patients.length>0){
+    patients.forEach((patient,i) => {
+      $("#patientContent").append(`
+        <tr>
+          <td>${i+1}</td>
+          <td>${patient.patientName}</td>
+          <td>${patient.patientPhoneNo}</td>
+          <td>${patient.patientAge}</td>
+        </tr>
+      `)
+    });
+  }
+}

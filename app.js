@@ -4,12 +4,13 @@ const app = express();
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const models = require("./models/model.js");
+const { json } = require("express/lib/response");
 
 app.use(express.static(__dirname + "/public"));
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
 
-mongoose.connect("mongodb://localhost:27017/doctorDB", {
+mongoose.connect("mongodb://localhost:27017/MP", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -31,7 +32,17 @@ app.get("/doctor", (req, res) => {
 });
 
 app.get("/patient",(req,res)=>{
-  res.render("patient");
+  Hospital.find({},(err,foundHospitals)=>{
+    if(!err){
+      if(foundHospitals){
+        res.render("patientRegister",{hospitalInfo:foundHospitals});
+      }
+    }
+  }
+)})
+
+app.get("/patient/login",(req,res)=>{
+  res.render("patientLogin");
 })
 
 app.get("/error", (req, res) => {
@@ -39,17 +50,13 @@ app.get("/error", (req, res) => {
 });
 
 app.post("/admin/verify", (req, res) => {
-  console.log(req.body.address);
   Hospital.findOne(
     { hospitalPublicAddress: req.body.address },
     (err, foundHospital) => {
       if (!err) {
-        console.log("No error");
         if (foundHospital) {
-          console.log("FoundUser");
           res.status(200).json({ hospitalData: foundHospital.doctorsList });
         } else {
-          console.log("NotFoundUser");
           res.status(409).json({ data: "You are not identified as Admin" });
         }
       }
@@ -58,49 +65,45 @@ app.post("/admin/verify", (req, res) => {
 });
 
 app.post("/admin/addDoctor", (req, res) => {
-  console.log("Address of hospital is :");
   console.log(req.body.doctorName);
+  console.log("Address of hospital is :");
   console.log(req.body.hospitalPublicAddress);
   console.log(req.body.publicAddress);
-  Doctor.findOne(
-    { publicAddress: req.body.publicAddress.toLowerCase() },
-    function(err, foundDoctor){
-      console.log(foundDoctor);
-      if (!err) {
-        if (!foundDoctor) {
-          console.log("Doctor not present in DB");
-          const newDoctor = new Doctor({
-            doctorName: req.body.doctorName,
-            publicAddress: req.body.publicAddress.toLowerCase(),
-          });
-          newDoctor.save(function (err, result) {
-            if (err) {
-              console.log(err);
-            }
-          });
-
-          Hospital.findOne(
-            { hospitalPublicAddress: req.body.hospitalPublicAddress },
-            (errHospital,foundHospital)=>{
-              if(!errHospital){
+  Hospital.findOne({hospitalPublicAddress:req.body.hospitalPublicAddress},(errHospital,foundHospital)=>{
+    if(!errHospital){
+      if(foundHospital){
+        Doctor.findOne(
+          { publicAddress: req.body.publicAddress.toLowerCase() },
+          function(err, foundDoctor){
+            console.log(foundDoctor);
+            if (!err) {
+              if (!foundDoctor) {
+                console.log("Doctor not present in DB");
+                const newDoctor = new Doctor({
+                  doctorName: req.body.doctorName,
+                  publicAddress: req.body.publicAddress.toLowerCase(),
+                });
+                newDoctor.save(function (err, result) {
+                  if (err) {
+                    console.log(err);
+                  }
+                });
                 foundHospital.doctorsList.push(newDoctor);
                 foundHospital.save();
-                res.status(200);
+                res.status(200).json({success:"Successfully added doctor"});
               }
-              else {
-                res.status(500).send("Database error");
+              else{
+                res.status(409).json({msg:"Doctor address already exists!!Cannot add"})
               }
             }
-          );
-        }
-        else{
-          console.log("Doctor already added");
-          res.status(409).json({msg:"Doctor is already present!! Cannot add!"});
-          
-        }
+          }
+        );
+      }
+      else{
+        res.status(409).json({msg:"You have no access to this page..Cannot add doctor!!"});
       }
     }
-  );
+  })
 });
 
 app.post("/doctor/verify", (req, res) => {
@@ -110,36 +113,65 @@ app.post("/doctor/verify", (req, res) => {
       if (!foundDoctor) {
         res.status(409).send("You are not identified as doctor");
       }
-      res.status(200).json({ doctorData: foundDoctor });
+      res.status(200).json({ doctorData: foundDoctor.patientsList });
     }
   });
 });
 
-app.post("/patient/verify", (req, res) => {
-  console.log(req.body.patientName);
-  console.log(req.body.phoneNo);
-  console.log(req.body.age);
-  
-  // Successsssssss
-  Hospital.find({},(err,foundHospital)=>{
+app.post("/patient/register", (req, res)=> {
+  Patient.findOne({patientPublicAddress:req.body.address},async function(err,foundPatient){
     if(!err){
-      if(foundHospital){
-        res.status(200).json({hospitalInfo:foundHospital});
+      if(foundPatient){
+        res.status(409).json({"Message":"Already registered..!Please login"});
       }
       else{
-        res.status(409).json({errorMsg:"No hospital found"});
+        const newPatient=new Patient({
+          patientName: req.body.patientName,
+          patientPhoneNo:req.body.phoneNo,
+          patientAge:req.body.age,
+          patientPassword:req.body.password,
+          patientPublicAddress:req.body.address,
+          hospitalId:req.body.hospitalId,
+          doctorId:req.body.doctorId
+        })
+        await newPatient.save((err,savedPatient)=>{
+          res.status(200).json({"id":savedPatient._id});
+        });
+        Doctor.findOne({_id:newPatient.doctorId},(err,foundDoctor)=>{
+          if(!err){
+            if(foundDoctor){
+              foundDoctor.patientsList.push(newPatient);
+              foundDoctor.save();
+              res.status(200);
+            }
+            else{
+              res.status(409).json({"Message":"Doctor not found"});
+            }
+          }
+        })
       }
     }
   })
+});
 
-  // Doctor.findOne({ publicAddress: req.body.address }, (err, foundDoctor) => {
-  //   if (!err) {
-  //     if (!foundDoctor) {
-  //       res.status(409).send("You are not identified as doctor");
-  //     }
-  //     res.status(200).json({ doctorData: foundDoctor });
-  //   }
-  // });
+app.post("/patient/login", (req, res)=> {
+  Patient.findOne({patientPublicAddress:req.body.address},(err,foundPatient)=>{
+    console.log(foundPatient);
+    console.log(req.body);
+    if(!err){
+      if(foundPatient){
+        if(foundPatient.patientPassword !== req.body.password){
+          res.status(409).json({"errorMsg":"Invalid password or Metamask account mismatch"});
+        }
+        else{
+          res.status(200).json({"id":foundPatient._id});
+        }
+      }
+      else{
+        res.status(409).json({"errorMsg":"User Account not found..Please Register!!"});
+      }
+    }
+  })
 });
 
 app.listen(3000, (req, res) => {

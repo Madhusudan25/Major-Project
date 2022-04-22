@@ -1,11 +1,23 @@
 <%- include('partials/header') %>
   <body>
-    
+    <div id="accessMsg">
+      You have to be doctor to access this page!!
+    </div>
+    <div id="content" hidden>
+      <table class="table table-striped w-25" id="patientContent">
+        <tr>
+          <th>Sl.No</th>
+          <th>Patient Name</th>
+          <th>Phone Number</th>
+          <th>Age</th>
+        </tr>
+      </table>
+    </div>
   </body>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
   <script
     type="text/javascript"
     src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.2.7-rc.0/web3.min.js"
   ></script>
-  <script src="/js/doctor.js"></script>
+  <script src="/js/doctor.js" type="module"></script>
 </html>

@@ -1,6 +1,10 @@
 <%- include('partials/header') %>
-  <body hidden>
-    <form action="/admin" method="post" >
+  <body>
+    <div id="accessMsg">
+      You have to be admin to access this page
+    </div>
+    
+    <form hidden>
       <input
         type="text"
         id="doctor_name"

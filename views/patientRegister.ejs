@@ -1,0 +1,50 @@
+<%- include('partials/header') %>
+
+<script src="/js/patient.js" type="module"></script>
+  <body>
+    <!-- <input type="text" name="patientName" id="patientName" placeholder="patient name"> -->
+    <!-- <input type="text" name="phoneNo" id="phoneNo" placeholder="phoneNo"> -->
+    <!-- <input type="text" name="age" id="age" placeholder="age"> -->
+    
+    <!-- <button type="submit" id="submitDetails">Submit</button> -->
+
+    <div class="mb-3">
+      <label for="exampleFormControlInput1" class="form-label">Patient Name</label>
+      <input type="text" class="form-control" name="patientName" id="patientName" placeholder="patient name">
+    </div>
+    <div class="mb-3">
+      <label for="exampleFormControlInput1" class="form-label">Phone Number</label>
+      <input class="form-control" type="text" name="phoneNo" id="phoneNo" placeholder="phoneNo">
+    </div>
+    <div class="mb-3">
+      <label for="exampleFormControlInput1" class="form-label">Age</label>
+      <input class="form-control" type="text" name="age" id="age" placeholder="age">
+    </div>
+    <div class="mb-3">
+      <label for="exampleFormControlInput1" class="form-label">Password</label>
+      <input class="form-control" type="password" name="password" id="password" placeholder="password">
+    </div>
+    <button id="loginToMetamask">Login to metamask</button>
+    <p id="metamaskAddress"></p>
+
+    
+    <br>
+
+    <select id="hospitalDetails" class="form-select w-25" aria-label="Default select example" data-test-value='<%- JSON.stringify(hospitalInfo) %>' >
+      <option value="" disabled selected>Select hospital...</option>
+    </select>
+
+    <select id="doctorDetails" class="form-select w-25" hidden ></select>
+
+    <br>
+    <button type="submit" id="submitDetails">Submit</button>
+    <a href="/patient/login">Already Registered? Just Login</a>
+  </body>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script
+    type="text/javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.2.7-rc.0/web3.min.js"
+  ></script>
+
+</html>

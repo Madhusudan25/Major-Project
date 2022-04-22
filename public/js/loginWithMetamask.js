@@ -1,6 +1,8 @@
 export const App = {
   load: async () => {
     await App.loadWeb3();
+    console.log("##################");
+    console.log(window.ethereum.selectedAddress);
     // await App.loadAccount();
   },
 

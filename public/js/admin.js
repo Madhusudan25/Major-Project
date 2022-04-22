@@ -1,38 +1,40 @@
 import { App } from "./loginWithMetamask.js";
 
 $(() => {
-  $(window).load(() => {
-    App.load();
+  $(window).load(async () => {
+    await App.load();
     verifyAccount();
   });
 });
 
 function verifyAccount() {
-  if (window.ethereum.selectedAddress != null) {
-    $.ajax({
-      url: "/admin/verify",
-      type: "post",
-      data: { address: window.ethereum.selectedAddress },
-      success: function (d) {
-        console.log("Logged in");
-        $("body").removeAttr("hidden");
-        console.log(d.hospitalData);
-        renderDoctorsInfoInHospital(d.hospitalData);
-      },
-      error: function (request, status, error) {
-        console.log(request);
-        console.log(error);
-        // alert(request.responseJSON.data);
-        // web3.currentProvider.close();
-
-        window.location.href = "/error";
-      },
-    });
+  if(window.ethereum.selectedAddress==null){
+    alert("Select the Metamask Address before proceeding");
+    return;
   }
+  $.ajax({
+    url: "/admin/verify",
+    type: "post",
+    data: { address: window.ethereum.selectedAddress },
+    success: function (d) {
+      console.log("Logged in");
+      console.log(d.hospitalData);
+      $("#accessMsg").hide();
+      $("form").attr("hidden",false);
+      renderDoctorsInfoInHospital(d.hospitalData);
+    },
+    error: function (request, status, error) {
+      console.log(request);
+      console.log(error);
+      window.location.href = "/error";
+    },
+  });
+  
 }
 
-$("#addDoctor").click(function (event) {
-  event.preventDefault();
+$("#addDoctor").click(function (e) {
+  e.preventDefault();
+  console.log(window.ethereum.selectedAddress);
   const doctorData = {
     doctorName: $("#doctor_name").val(),
     publicAddress: $("#public_address").val(),
@@ -46,15 +48,17 @@ $("#addDoctor").click(function (event) {
     type: "post",
     data: doctorData,
     success: function (d) {
-      console.log(d);
-      //   window.location.href = d.url;
+      $("#accessMsg").hide();
+      $("#form").show();
+      console.log("Success")
+      $("#doctor_name").val("");
+      $("#public_address").val("");
+      alert("Doctor added successfully");
     },
     error: function (request, status, error) {
-      console.log(request);
-      console.log(status);
-      console.log(error);
-      alert(request.responseText);
+      alert(request.responseJSON.msg);
     },
+    
   });
 });
 
