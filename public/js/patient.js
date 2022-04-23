@@ -41,7 +41,8 @@ function verifyAccount() {
     success: function (d) {
       console.log("Success");
       console.log(d);
-      window.location.href=`/patient/${d.id}`;
+      alert(`Successfully registered!Redirecting to '/patient/${d.id}`);
+      // window.location.href=`/patient/${d.id}`;
     },
     error: function (request, status, error) {
       $("#loginToMetamask").text("Login to metamask");

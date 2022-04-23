@@ -134,15 +134,19 @@ app.post("/patient/register", (req, res)=> {
           hospitalId:req.body.hospitalId,
           doctorId:req.body.doctorId
         })
+        console.log(newPatient);
+        let patientInfo;
         await newPatient.save((err,savedPatient)=>{
-          res.status(200).json({"id":savedPatient._id});
+          console.log(savedPatient);
+          patientInfo=savedPatient._id;
+          // res.status(200).json({"id":savedPatient._id});
         });
         Doctor.findOne({_id:newPatient.doctorId},(err,foundDoctor)=>{
           if(!err){
             if(foundDoctor){
               foundDoctor.patientsList.push(newPatient);
               foundDoctor.save();
-              res.status(200);
+              res.status(200).json({"id":patientInfo._id});
             }
             else{
               res.status(409).json({"Message":"Doctor not found"});
