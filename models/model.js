@@ -32,4 +32,4 @@ module.exports = {
   Patient: PatientModel,
 };
 
-// db.hospitals.insert({hospitalName:"Hospital one",hospitalPublicAddress:"0x145aad8e3611965f9732cc1050390bbb14401e3d",doctorsList:[]})
+// db.hospitals.insert({hospitalName:"Hospital one",hospitalPublicAddress:"0xfa22002a52d93259011311080df654c221092eed",doctorsList:[]})

@@ -10,7 +10,7 @@ app.use(express.static(__dirname + "/public"));
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
 
-mongoose.connect("mongodb://localhost:27017/MP", {
+mongoose.connect("mongodb://127.0.0.1:27017/MP", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -56,7 +56,8 @@ app.post("/admin/verify", (req, res) => {
       if (!err) {
         if (foundHospital) {
           res.status(200).json({ hospitalData: foundHospital.doctorsList });
-        } else {
+        } 
+        else {
           res.status(409).json({ data: "You are not identified as Admin" });
         }
       }
@@ -111,9 +112,11 @@ app.post("/doctor/verify", (req, res) => {
   Doctor.findOne({ publicAddress: req.body.address }, (err, foundDoctor) => {
     if (!err) {
       if (!foundDoctor) {
-        res.status(409).send("You are not identified as doctor");
+        res.status(409).json("You are not identified as doctor");
       }
-      res.status(200).json({ doctorData: foundDoctor.patientsList });
+      else{
+        res.status(200).json({ doctorData: foundDoctor.patientsList });
+      }
     }
   });
 });

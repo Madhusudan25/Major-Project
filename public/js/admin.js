@@ -26,7 +26,7 @@ function verifyAccount() {
     error: function (request, status, error) {
       console.log(request);
       console.log(error);
-      window.location.href = "/error";
+      alert("You are not authenticated..Please check your login");
     },
   });
   

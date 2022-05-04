@@ -21,10 +21,18 @@ function verifyAccount() {
     data: { address: window.ethereum.selectedAddress },
     success: function (d) {
       console.log("Success");
-      console.log(d.doctorData);
+      console.log(d.doctorData.length);
       $("#accessMsg").hide();
       $("#content").attr("hidden",false);
-      displayContent(d.doctorData);
+     
+      if(d.doctorData.length==0){
+        $("#patientContent").hide();
+        $("#noPatientMsg").append("There are no patients under you!!");
+      }
+      else{
+        displayContent(d.doctorData);
+
+      }
     },
     error: function (request, status, error) {
       $("#content").attr("hidden",true)
@@ -36,6 +44,8 @@ function verifyAccount() {
 
 
 function displayContent(patients){
+  $("#patientContent").show();
+  $("#noPatientMsg").text("");
   if(patients.length>0){
     patients.forEach((patient,i) => {
       $("#patientContent").append(`

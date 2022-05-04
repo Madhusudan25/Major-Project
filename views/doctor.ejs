@@ -1,10 +1,18 @@
 <%- include('partials/header') %>
   <body>
-    <div id="accessMsg">
-      You have to be doctor to access this page!!
+    <%- include('partials/navbar') %>
+    <div id="accessMsg" style="text-align: center;margin: 40vh;">
+      <div class="spinner-border text-secondary" role="status">
+        <span class="sr-only"></span>
+      </div>
+      <br>
+      <div>
+        You have to be doctor to access this page!!
+      </div>
+      
     </div>
-    <div id="content" hidden>
-      <table class="table table-striped w-25" id="patientContent">
+    <div id="content" hidden >
+      <table class="table table-striped w-25" id="patientContent" style="text-align: center;margin: 15vh;">
         <tr>
           <th>Sl.No</th>
           <th>Patient Name</th>
@@ -12,6 +20,7 @@
           <th>Age</th>
         </tr>
       </table>
+      <p id="noPatientMsg"></p>
     </div>
   </body>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>

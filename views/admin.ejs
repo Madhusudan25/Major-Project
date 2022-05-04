@@ -1,24 +1,33 @@
 <%- include('partials/header') %>
+
   <body>
-    <div id="accessMsg">
-      You have to be admin to access this page
+    <%- include('partials/navbar') %>
+    <div id="accessMsg" style="text-align:center;margin: 45vh;">
+      <div class="spinner-border text-secondary" role="status">
+        <span class="sr-only"></span>
+      </div>
+      <br>
+      <div>
+        You have to be admin to access this page!!
+      </div>
     </div>
-    
-    <form hidden>
-      <input
-        type="text"
-        id="doctor_name"
-        name="name"
-        placeholder="Doctor name"
-      />
-      <input
-        type="text"
-        name="public_address"
-        id="public_address"
-        placeholder="Public address"
-      />
-      <button type="submit" id="addDoctor">Register</button>
-    </form>
+    <div style="text-align: center;margin: 25vh;">
+      <form hidden>
+        <input
+          type="text"
+          id="doctor_name"
+          name="name"
+          placeholder="Doctor name"
+        />
+        <input
+          type="text"
+          name="public_address"
+          id="public_address"
+          placeholder="Public address"
+        />
+        <button type="submit" id="addDoctor">Register</button>
+      </form>
+    </div>
   </body>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -28,3 +37,5 @@
   ></script>
   <script src="/js/admin.js" type="module"></script>
 </html>
+
+
