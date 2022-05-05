@@ -16,6 +16,7 @@
     "express": "^4.17.3",
     "mongoose": "^6.3.0",
     "nodemon": "^2.0.15",
-    "web3": "^1.7.3"
+    "truffle": "^5.0.2",
+    "@truffle/contract": "4.3.33"
   }
 }

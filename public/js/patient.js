@@ -72,3 +72,23 @@ $( "#hospitalDetails" ).change(function(e) {
     `)
   });
 });
+
+
+$("#clickMe0").click(()=>{
+  console.log("Clicked");
+  App.loadContract();
+})
+
+$("#clickMe1").click(()=>{
+  console.log("Clicked 1");
+  App.registerPublicAddress();
+})
+
+$("#clickMe2").click(()=>{
+  console.log("Clicked 2");
+  App.addData();
+})
+$("#clickMe3").click(()=>{
+  console.log("Clicked 3");
+  App.getData();
+})

@@ -7,6 +7,7 @@ const models = require("./models/model.js");
 const { json } = require("express/lib/response");
 
 app.use(express.static(__dirname + "/public"));
+app.use(express.static(__dirname + "/build/contracts"));
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -149,7 +150,7 @@ app.post("/patient/register", (req, res)=> {
             if(foundDoctor){
               foundDoctor.patientsList.push(newPatient);
               foundDoctor.save();
-              res.status(200).json({"id":patientInfo._id});
+              res.status(200).json({"id":patientInfo});
             }
             else{
               res.status(409).json({"Message":"Doctor not found"});
