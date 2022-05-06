@@ -6,19 +6,19 @@
     <div style="width: 30%; margin: 30px auto;position: relative;">
       <div class="mb-3">
         <label for="exampleFormControlInput1" class="form-label">Patient Name</label>
-        <input type="text" class="form-control" name="patientName" id="patientName" placeholder="patient name">
+        <input type="text" class="form-control" name="patientName" id="patientName" placeholder="patient name" value="abc">
       </div>
       <div class="mb-3">
         <label for="exampleFormControlInput1" class="form-label">Phone Number</label>
-        <input class="form-control" type="text" name="phoneNo" id="phoneNo" placeholder="phoneNo">
+        <input class="form-control" type="text" name="phoneNo" id="phoneNo" placeholder="phoneNo" value="1">
       </div>
       <div class="mb-3">
         <label for="exampleFormControlInput1" class="form-label">Age</label>
-        <input class="form-control" type="text" name="age" id="age" placeholder="age">
+        <input class="form-control" type="text" name="age" id="age" placeholder="age" value="11">
       </div>
       <div class="mb-3">
         <label for="exampleFormControlInput1" class="form-label">Password</label>
-        <input class="form-control" type="password" name="password" id="password" placeholder="password">
+        <input class="form-control" type="password" name="password" id="password" placeholder="password" value="1">
       </div>
       <button id="loginToMetamask" class="btn btn-outline-secondary">Login to metamask</button>
       <div class="alert alert-light" id="metamaskAddress" role="alert">
@@ -36,10 +36,8 @@
       <a href="/patient/login" style="position: absolute;right: 0;">Already Registered? Just Login</a>
     </div>
 
-    <button id="clickMe0">ClickMeZero</button>
-    <button id="clickMe1">ClickMeOne</button>
-    <button id="clickMe2">ClickMeNikhil</button>
-    <button id="clickMe3">ClickMeVishnul</button>
+    <button id="addData">Add data</button>
+    <button id="getData">getData</button>
   </body>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -47,7 +45,5 @@
     type="text/javascript"
     src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.2.7-rc.0/web3.min.js"
   ></script>
-  <!-- <script src="js/truffle-contract.js"></script>
-   -->
-   <script src="js/@truffle/contract/dist/truffle-contract.js"></script>
+   <script src="/js/@truffle/contract/dist/truffle-contract.js"></script>
 </html>

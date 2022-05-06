@@ -42,7 +42,8 @@ function verifyAccount() {
       console.log("Success");
       console.log(d);
       alert(`Successfully registered!Redirecting to '/patient/${d.id}`);
-      // window.location.href=`/patient/${d.id}`;
+      window.location.href=`/patient/${d.id}`;
+      // window.location.href="/patient/test"
     },
     error: function (request, status, error) {
       $("#loginToMetamask").text("Login to metamask");
@@ -73,22 +74,17 @@ $( "#hospitalDetails" ).change(function(e) {
   });
 });
 
-
-$("#clickMe0").click(()=>{
-  console.log("Clicked");
+$( document ).ready(function() {
   App.loadContract();
-})
+  console.log( "ready!" );
+});
 
-$("#clickMe1").click(()=>{
-  console.log("Clicked 1");
-  App.registerPublicAddress();
-})
-
-$("#clickMe2").click(()=>{
-  console.log("Clicked 2");
+$("#addData").click(()=>{
+  console.log("Clicked Add Data"); 
   App.addData();
 })
-$("#clickMe3").click(()=>{
-  console.log("Clicked 3");
+
+$("#getData").click(()=>{
+  console.log("Clicked Get Data");
   App.getData();
 })

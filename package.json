@@ -11,12 +11,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@truffle/contract": "4.3.33",
     "body-parser": "^1.20.0",
     "ejs": "^3.1.6",
     "express": "^4.17.3",
+    "md5": "^2.3.0",
     "mongoose": "^6.3.0",
     "nodemon": "^2.0.15",
-    "truffle": "^5.0.2",
-    "@truffle/contract": "4.3.33"
+    "truffle": "^5.0.2"
   }
 }

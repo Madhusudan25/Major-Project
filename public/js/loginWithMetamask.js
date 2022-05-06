@@ -21,6 +21,7 @@ export const App = {
       window.web3 = new Web3(ethereum);
       const accounts = await window.ethereum.request({
         method: "eth_requestAccounts",
+        
       });
 
       if (accounts.length == 0) {
@@ -43,7 +44,7 @@ export const App = {
 
   loadContract: async () => {
     // Create a JavaScript version of the smart contract
-    const health = await $.getJSON('MajorProject.json')
+    const health = await $.getJSON('/MajorProject.json')
     console.log(health);
     App.contracts.MajorProject = TruffleContract(health);
     console.log("Truffle contract working");
@@ -54,21 +55,20 @@ export const App = {
     console.log(App.health);
   },
 
-  registerPublicAddress: async () => {
-    await App.health.setPublicAddress(window.ethereum.selectedAddress,{from : window.ethereum.selectedAddress})
+  // registerPublicAddress: async () => {
+  //   await App.health.setPublicAddress(window.ethereum.selectedAddress,{from : window.ethereum.selectedAddress})
+  // },
 
-  },
-
-  addData: async () => {
-    await App.health.addNewData(window.ethereum.selectedAddress,"a","b",{from : window.ethereum.selectedAddress});
-    console.log("suceessfullt added data")
+  addData: async (record_id,record_hash) => {
+    await App.health.setPatientData(window.ethereum.selectedAddress,record_id,record_hash,{from : window.ethereum.selectedAddress});
+    console.log("successfully added data")
   },
 
   getData: async () => {
-    var result= await App.health.getData(window.ethereum.selectedAddress);
+    var result= await App.health.getRecordData(window.ethereum.selectedAddress);
     console.log(result)
   },
 
-};
+};                                                    
 
 // 26404975793

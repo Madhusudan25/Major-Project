@@ -4,10 +4,15 @@ const app = express();
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const models = require("./models/model.js");
-const { json } = require("express/lib/response");
+const md5 = require("md5");
 
+// ///////////////////////////////
+const {spawn} =require('child_process');
+
+// /////////////////
 app.use(express.static(__dirname + "/public"));
 app.use(express.static(__dirname + "/build/contracts"));
+
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -19,6 +24,7 @@ mongoose.connect("mongodb://127.0.0.1:27017/MP", {
 const Doctor = models.Doctor;
 const Hospital = models.Hospital;
 const Patient = models.Patient;
+const PatientDiabetesData = models.PatientDiabetesData;
 
 app.get("/", (req, res) => {
   res.render("home");
@@ -143,7 +149,6 @@ app.post("/patient/register", (req, res)=> {
         await newPatient.save((err,savedPatient)=>{
           console.log(savedPatient);
           patientInfo=savedPatient._id;
-          // res.status(200).json({"id":savedPatient._id});
         });
         Doctor.findOne({_id:newPatient.doctorId},(err,foundDoctor)=>{
           if(!err){
@@ -181,6 +186,96 @@ app.post("/patient/login", (req, res)=> {
     }
   })
 });
+
+
+// Handling Machine learning 
+
+app.get("/patient/:id",(req,res)=>{
+  res.render("patientAfterLogin")
+})
+
+app.post("/patient/:id",async (req,res)=>{
+  var id=req.params.id;
+  console.log("Mongo Id is : " + id);
+  console.log("Data received is : "+ req.body.data)
+
+  var age=generateRandomNumber();
+  var pregnancies=generateRandomNumber(0,17);
+  var glucose=generateRandomNumber(0,199);
+  var bloodPressure=generateRandomNumber(0,122);
+  var skinThickness=generateRandomNumber(0,99);
+  var insulin=generateRandomNumber(0,846);
+  var BMI=generateRandomNumber(0,68);
+  var pedigreeFunction=parseFloat(generateRandomNumber(0,3));
+  var diabetesResult;
+  
+  const  diabetes_model= spawn('python',['Python_files/diabetes_prediction.py',[pregnancies,glucose,bloodPressure,skinThickness,insulin,BMI,pedigreeFunction,age]]);
+
+  diabetes_model.stdout.on('data',(data)=>{
+      // Cannot use console.log(data)-->It gives buffer value;
+      console.log(`${data}`);
+      diabetesResult=Math.round(parseFloat(data))
+      // res.send("The predicted output of diabetes prediction is: "+ Math.round(parseFloat(data)))
+  })
+
+  diabetes_model.stderr.on('data',(data)=>{
+      console.log("Error is :",`${data}`);
+  })
+
+  await new Promise(resolve => setTimeout(resolve, 10000));
+
+  Patient.findOne({_id:id},(err,foundPatient)=>{
+    if(!err){
+      if(!foundPatient){
+        res.status(404).json({"message":"Patient is not found"});
+      }
+      else
+      {
+        const data=new PatientDiabetesData({
+          testAge : age,
+          testPregnancies : pregnancies,
+          testGlucose : glucose,
+          testBloodPressure : bloodPressure,
+          testSkinThickness : skinThickness,
+          testInsulin : insulin,
+          testBMI : BMI,
+          testPedigreeFunction : pedigreeFunction,
+          testDiabetesResult : diabetesResult
+        })
+        foundPatient.testsData.push(data);
+        foundPatient.save((error,savedPatient)=>{
+          console.log(savedPatient);
+          if(!error){
+            if(savedPatient)
+            {var dataTestedArray=savedPatient.testsData;
+              var lastTestedData=dataTestedArray[dataTestedArray.length-1];
+              var lastTestedDataMongoId=lastTestedData._id;
+    
+              var lastTestedDataHash=md5(lastTestedData);
+    
+              console.log(lastTestedData);
+              console.log(lastTestedDataMongoId);
+              console.log(lastTestedDataHash);
+              res.status(200).json({"id":lastTestedDataMongoId,"hash":lastTestedDataHash});}
+          }
+          else{
+            res.status(404).json({"msg":"couldnot save patientinfo"});
+          }
+          
+          
+
+        });
+      }
+      
+    }
+  })
+})
+
+function generateRandomNumber(low=0,high=100){
+  return parseFloat(Math.floor(low + (Math.random() * high) + 1));
+
+}
+
 
 app.listen(3000, (req, res) => {
   console.log("Server is started at port 3000");

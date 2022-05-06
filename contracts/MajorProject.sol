@@ -3,47 +3,31 @@ pragma solidity >=0.4.22 <0.9.0;
 pragma experimental ABIEncoderV2;
 
 contract MajorProject {
-
-    struct mongoData{
-        string hashs;
-       string mongoid;
+        struct PatientHealthData{
+        string recordId;
+        string recordHash;
     }
-    mongoData[] data;
-    address publicAddress;
-    address[] allPatientAddress;
+    PatientHealthData[] Records;
+    address patientPublicAddress;
 
-    mapping(address=>mongoData[]) public Data;
+    mapping(address=>PatientHealthData[]) public Data;
 
-    function setPublicAddress(address pa) public {
-        if(has(pa)){
-            return;
+    function setPatientData(address publicAddress,string memory _recordId,string memory _recordHash) public {
+        // Assigning public address here
+      
+        patientPublicAddress=publicAddress;
+
+        //Deletinng the global data when new user is registered
+        if(Data[publicAddress].length==0){
+            delete Records;
         }
-        allPatientAddress.push(pa);
-        publicAddress=pa;
-        
+        Records.push(PatientHealthData(_recordId,_recordHash));
+        Data[publicAddress]=Records;
     }
 
-    function addNewData(address pa,string memory h,string memory m) public {
-        if(!has(pa)){
-            return;
-        }
-        if(Data[pa].length==0){
-            delete data;
-        }
-        data.push(mongoData(h,m));
-        Data[pa]=data;
-    }
-    function getData(address pa) view public returns (mongoData[] memory) {
+   
+    function getRecordData(address pa) view public returns (PatientHealthData[] memory) {
         return Data[pa];
-    }
-
-    function has(address pa) view public returns(bool){
-        for (uint256 index = 0; index < allPatientAddress.length; index++) {
-            if(allPatientAddress[index]==pa){
-                return false;
-            }
-        }
-        return true;
     }
     
 }
