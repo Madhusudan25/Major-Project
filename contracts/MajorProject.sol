@@ -7,27 +7,54 @@ contract MajorProject {
         string recordId;
         string recordHash;
     }
-    PatientHealthData[] Records;
+    PatientHealthData[] DiabetesRecords;
+    PatientHealthData[] HeartRecords;
+
     address patientPublicAddress;
 
-    mapping(address=>PatientHealthData[]) public Data;
+    mapping(address => PatientHealthData[]) public DiabetesData;
+    mapping(address => PatientHealthData[]) public HeartData;
 
-    function setPatientData(address publicAddress,string memory _recordId,string memory _recordHash) public {
-        // Assigning public address here
-      
-        patientPublicAddress=publicAddress;
-
-        //Deletinng the global data when new user is registered
-        if(Data[publicAddress].length==0){
-            delete Records;
+    function setPatientDiabetesData(
+        address publicAddress,
+        string memory _recordId,
+        string memory _recordHash
+    ) public {
+        patientPublicAddress = publicAddress;
+        if (DiabetesData[publicAddress].length == 0) {
+            delete DiabetesRecords;
         }
-        Records.push(PatientHealthData(_recordId,_recordHash));
-        Data[publicAddress]=Records;
+        DiabetesRecords.push(PatientHealthData(_recordId, _recordHash));
+        DiabetesData[publicAddress] = DiabetesRecords;
     }
 
-   
-    function getRecordData(address pa) view public returns (PatientHealthData[] memory) {
-        return Data[pa];
+    function getDiabetesData(address pa)
+        public
+        view
+        returns (PatientHealthData[] memory)
+    {
+        return DiabetesData[pa];
+    }
+
+    function setPatientHeartData(
+        address publicAddress,
+        string memory _recordId,
+        string memory _recordHash
+    ) public {
+        patientPublicAddress = publicAddress;
+        if (HeartData[publicAddress].length == 0) {
+            delete HeartRecords;
+        }
+        HeartRecords.push(PatientHealthData(_recordId, _recordHash));
+        HeartData[publicAddress] = HeartRecords;
+    }
+
+    function getHeartData(address pa)
+        public
+        view
+        returns (PatientHealthData[] memory)
+    {
+        return HeartData[pa];
     }
     
 }

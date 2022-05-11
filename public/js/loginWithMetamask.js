@@ -59,13 +59,23 @@ export const App = {
   //   await App.health.setPublicAddress(window.ethereum.selectedAddress,{from : window.ethereum.selectedAddress})
   // },
 
-  addData: async (record_id,record_hash) => {
-    await App.health.setPatientData(window.ethereum.selectedAddress,record_id,record_hash,{from : window.ethereum.selectedAddress});
+  addDiabetesData: async (record_id,record_hash) => {
+    await App.health.setPatientDiabetesData(window.ethereum.selectedAddress,record_id,record_hash,{from : window.ethereum.selectedAddress});
     console.log("successfully added data")
   },
 
-  getData: async () => {
-    var result= await App.health.getRecordData(window.ethereum.selectedAddress);
+  getDiabetesData: async () => {
+    var result= await App.health.getDiabetesData(window.ethereum.selectedAddress);
+    console.log(result)
+  },
+
+  addHeartData: async (record_id,record_hash) => {
+    await App.health.setPatientHeartData(window.ethereum.selectedAddress,record_id,record_hash,{from : window.ethereum.selectedAddress});
+    console.log("successfully added data")
+  },
+
+  getHeartData: async () => {
+    var result= await App.health.getHeartData(window.ethereum.selectedAddress);
     console.log(result)
   },
 

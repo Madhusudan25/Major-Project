@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const models = require("./models/model.js");
 const md5 = require("md5");
+var waitUntil = require('wait-until');
 
 // ///////////////////////////////
 const {spawn} =require('child_process');
@@ -25,6 +26,7 @@ const Doctor = models.Doctor;
 const Hospital = models.Hospital;
 const Patient = models.Patient;
 const PatientDiabetesData = models.PatientDiabetesData;
+const PatientHeartData = models.PatientHeartData;
 
 app.get("/", (req, res) => {
   res.render("home");
@@ -194,7 +196,7 @@ app.get("/patient/:id",(req,res)=>{
   res.render("patientAfterLogin")
 })
 
-app.post("/patient/:id",async (req,res)=>{
+app.post("/patient/:id/diabtetesTest",async (req,res)=>{
   var id=req.params.id;
   console.log("Mongo Id is : " + id);
   console.log("Data received is : "+ req.body.data)
@@ -207,7 +209,7 @@ app.post("/patient/:id",async (req,res)=>{
   var insulin=generateRandomNumber(0,846);
   var BMI=generateRandomNumber(0,68);
   var pedigreeFunction=parseFloat(generateRandomNumber(0,3));
-  var diabetesResult;
+  var diabetesResult=-999;
   
   const  diabetes_model= spawn('python',['Python_files/diabetes_prediction.py',[pregnancies,glucose,bloodPressure,skinThickness,insulin,BMI,pedigreeFunction,age]]);
 
@@ -215,6 +217,52 @@ app.post("/patient/:id",async (req,res)=>{
       // Cannot use console.log(data)-->It gives buffer value;
       console.log(`${data}`);
       diabetesResult=Math.round(parseFloat(data))
+      Patient.findOne({_id:id},(err,foundPatient)=>{
+        if(!err){
+          if(!foundPatient){
+            res.status(404).json({"message":"Patient is not found"});
+          }
+          else
+          {
+            const data=new PatientDiabetesData({
+              testAge : age,
+              testPregnancies : pregnancies,
+              testGlucose : glucose,
+              testBloodPressure : bloodPressure,
+              testSkinThickness : skinThickness,
+              testInsulin : insulin,
+              testBMI : BMI,
+              testPedigreeFunction : pedigreeFunction,
+              testDiabetesResult : diabetesResult
+            })
+            foundPatient.testDiabetesData.push(data);
+            foundPatient.save((error,savedPatient)=>{
+              console.log(savedPatient);
+              if(!error){
+                if(savedPatient)
+                {var dataTestedArray=savedPatient.testDiabetesData;
+                  var lastTestedData=dataTestedArray[dataTestedArray.length-1];
+                  var lastTestedDataMongoId=lastTestedData._id;
+        
+                  var lastTestedDataHash=md5(lastTestedData);
+        
+                  console.log(lastTestedData);
+                  console.log(lastTestedDataMongoId);
+                  console.log(lastTestedDataHash);
+                  res.status(200).json({"id":lastTestedDataMongoId,"hash":lastTestedDataHash});}
+              }
+              else{
+                res.status(404).json({"msg":"couldnot save patientinfo"});
+              }
+              
+              
+    
+            });
+          }
+          
+        }
+      })
+
       // res.send("The predicted output of diabetes prediction is: "+ Math.round(parseFloat(data)))
   })
 
@@ -222,59 +270,92 @@ app.post("/patient/:id",async (req,res)=>{
       console.log("Error is :",`${data}`);
   })
 
-  await new Promise(resolve => setTimeout(resolve, 10000));
-
-  Patient.findOne({_id:id},(err,foundPatient)=>{
-    if(!err){
-      if(!foundPatient){
-        res.status(404).json({"message":"Patient is not found"});
-      }
-      else
-      {
-        const data=new PatientDiabetesData({
-          testAge : age,
-          testPregnancies : pregnancies,
-          testGlucose : glucose,
-          testBloodPressure : bloodPressure,
-          testSkinThickness : skinThickness,
-          testInsulin : insulin,
-          testBMI : BMI,
-          testPedigreeFunction : pedigreeFunction,
-          testDiabetesResult : diabetesResult
-        })
-        foundPatient.testsData.push(data);
-        foundPatient.save((error,savedPatient)=>{
-          console.log(savedPatient);
-          if(!error){
-            if(savedPatient)
-            {var dataTestedArray=savedPatient.testsData;
-              var lastTestedData=dataTestedArray[dataTestedArray.length-1];
-              var lastTestedDataMongoId=lastTestedData._id;
-    
-              var lastTestedDataHash=md5(lastTestedData);
-    
-              console.log(lastTestedData);
-              console.log(lastTestedDataMongoId);
-              console.log(lastTestedDataHash);
-              res.status(200).json({"id":lastTestedDataMongoId,"hash":lastTestedDataHash});}
-          }
-          else{
-            res.status(404).json({"msg":"couldnot save patientinfo"});
-          }
-          
-          
-
-        });
-      }
-      
-    }
-  })
+  
 })
+
 
 function generateRandomNumber(low=0,high=100){
   return parseFloat(Math.floor(low + (Math.random() * high) + 1));
 
 }
+
+app.post("/patient/:id/heartDiseaseTest",async (req,res)=>{
+  var id=req.params.id;
+  console.log("Mongo Id is : " + id);
+  console.log("Data received is : "+ req.body.data)
+
+    var age=generateRandomNumber();
+    var sex=generateRandomNumber(0,1);
+    var cp=generateRandomNumber(0,3);
+    var trestbps=generateRandomNumber(94,200);
+    var chol=generateRandomNumber(126,564);
+    var fbs=generateRandomNumber(0,1)
+    var restecg=generateRandomNumber(0,2)
+    var thalach=generateRandomNumber(71,202)
+    var exang=generateRandomNumber(0,1)
+    var oldpeak=generateRandomNumber(0,6.2)
+    var slope=generateRandomNumber(0,2)
+    var ca=generateRandomNumber(0,4)
+    var thal=generateRandomNumber(0,3)
+    var value;
+
+    const  heart_model=spawn('python',['Python_files/heart_prediction.py',[age,sex,cp,trestbps,chol,fbs,restecg,thalach,exang,oldpeak,slope,ca,thal]]);
+
+    heart_model.stdout.on('data',(data)=>{
+        console.log(`${data}`);
+        value=`${data}`;
+        Patient.findOne({_id:id},(err,foundPatient)=>{
+          if(!err){
+            if(!foundPatient){
+              res.status(404).json({"message":"Patient is not found"});
+            }
+            else
+            {
+              const data=new PatientHeartData({
+                age:age,
+                sex : sex,
+                cp: cp,
+                trestbps: trestbps,
+                chol: chol,
+                fbs: fbs,
+                restecg:restecg ,
+                thalach:thalach ,
+                exang: exang,
+                oldpeak: oldpeak,
+                slope: slope,
+                ca: ca,
+                thal: thal,
+                testHeartResult : value
+              })
+      
+              foundPatient.testHeartData.push(data);
+              foundPatient.save((error,savedPatient)=>{
+                console.log(savedPatient);
+                if(!error){
+                  if(savedPatient)
+                  {var dataTestedArray=savedPatient.testHeartData;
+                    var lastTestedData=dataTestedArray[dataTestedArray.length-1];
+                    var lastTestedDataMongoId=lastTestedData._id;
+          
+                    var lastTestedDataHash=md5(lastTestedData);
+          
+                    console.log(lastTestedData);
+                    console.log(lastTestedDataMongoId);
+                    console.log(lastTestedDataHash);
+                    res.status(200).json({"id":lastTestedDataMongoId,"hash":lastTestedDataHash});}
+                }
+                else{
+                  res.status(404).json({"msg":"could not save patientinfo"});
+                }
+              });
+            } 
+          }
+        })
+    })
+
+  
+})
+
 
 
 app.listen(3000, (req, res) => {

@@ -39,17 +39,17 @@ $("#submitDetails").click(() => {
 $( document ).ready(function() {
   App.load();
     console.log( "ready!" );
+    App.loadContract();
   });
 
-$("#testbtn").click(()=>{
-  App.loadContract();
+$("#testDiabetesbtn").click(()=>{
   $.ajax({
-    url: window.location.pathname,
+    url: window.location.pathname+"/diabtetesTest",
     type: "post",
     data: {data:window.ethereum.selectedAddress},
     success: function (d) {
       console.log(d);
-      App.addData(d.id,d.hash);
+      App.addDiabetesData(d.id,d.hash);
     },
     error: function (request, status, error) {
       alert(request.responseJSON.Message);
@@ -57,6 +57,26 @@ $("#testbtn").click(()=>{
   });
 })
 
-$("#showDatabtn").click(()=>{
-  App.getData();
+$("#showDiabetesDatabtn").click(()=>{
+  App.getDiabetesData();
+})
+
+$("#testHeartbtn").click(()=>{
+  
+  $.ajax({
+    url: window.location.pathname+"/heartDiseaseTest",
+    type: "post",
+    data: {data:window.ethereum.selectedAddress},
+    success: function (d) {
+      console.log(d);
+      App.addHeartData(d.id,d.hash);
+    },
+    error: function (request, status, error) {
+      alert(request.responseJSON.Message);
+    },
+  });
+})
+
+$("#showHeartDatabtn").click(()=>{
+  App.getHeartData();
 })
