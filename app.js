@@ -5,12 +5,9 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const models = require("./models/model.js");
 const md5 = require("md5");
-var waitUntil = require('wait-until');
 
-// ///////////////////////////////
 const {spawn} =require('child_process');
 
-// /////////////////
 app.use(express.static(__dirname + "/public"));
 app.use(express.static(__dirname + "/build/contracts"));
 
@@ -189,7 +186,6 @@ app.post("/patient/login", (req, res)=> {
   })
 });
 
-
 // Handling Machine learning 
 
 app.get("/patient/:id",(req,res)=>{
@@ -356,8 +352,26 @@ app.post("/patient/:id/heartDiseaseTest",async (req,res)=>{
   
 })
 
+app.delete("/patient/:id/deteleLastDiabetesData",(req,res)=>{
+  const id=req.params.id;
+  console.log(req.body.data);
+  Patient.findOne({_id:id},(err,foundPatient)=>{
+    foundPatient.testDiabetesData.pop();
+    foundPatient.save();
+  })
+})
 
-
+app.post("/patient/:id/compareBCandMongoDiabetesData",(req,res)=>{
+  const bcResult=req.body.result;
+  Patient.findOne({_id:req.params.id},(err,found)=>{
+    found.testDiabetesData.forEach(function(data,i) {
+      if(data._id.toString()!==bcResult[i][0] || md5(data)!==bcResult[i][1]){
+        res.status(400).json({"msg":"Data integrity compromised!!"})
+      }
+    });
+    res.status(200).json({data:found.testDiabetesData})
+  })
+})
 app.listen(3000, (req, res) => {
   console.log("Server is started at port 3000");
 });

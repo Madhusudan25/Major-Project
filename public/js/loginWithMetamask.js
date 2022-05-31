@@ -66,7 +66,7 @@ export const App = {
 
   getDiabetesData: async () => {
     var result= await App.health.getDiabetesData(window.ethereum.selectedAddress);
-    console.log(result)
+    return (result);
   },
 
   addHeartData: async (record_id,record_hash) => {

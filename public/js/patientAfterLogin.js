@@ -49,7 +49,22 @@ $("#testDiabetesbtn").click(()=>{
     data: {data:window.ethereum.selectedAddress},
     success: function (d) {
       console.log(d);
-      App.addDiabetesData(d.id,d.hash);
+      App.addDiabetesData(d.id,d.hash).catch(function(){
+        alert("Test data as been deleted..Please retest!!");
+        $.ajax({
+          url: window.location.pathname+"/deteleLastDiabetesData",
+          type: "delete",
+          data: {data:d.id},
+          success: function (d) {
+            console.log("Hello");
+            console.log(d);
+            
+          },
+          error: function (request, status, error) {
+            alert(request.responseJSON.Message);
+          },
+        });
+      })
     },
     error: function (request, status, error) {
       alert(request.responseJSON.Message);
@@ -58,11 +73,27 @@ $("#testDiabetesbtn").click(()=>{
 })
 
 $("#showDiabetesDatabtn").click(()=>{
-  App.getDiabetesData();
+  App.getDiabetesData().then(function(result){
+    if(result.length===0){
+      alert("You dont have records!!")
+    }
+    else{
+      $.ajax({
+        url: window.location.pathname+"/compareBCandMongoDiabetesData",
+        type: "post",
+        data: {result:result},
+        success: function (d) {
+          console.log(d.data);
+        },
+        error: function (request, status, error) {
+          alert(request.responseJSON.msg);
+        },
+      });
+    }
+  });
 })
 
 $("#testHeartbtn").click(()=>{
-  
   $.ajax({
     url: window.location.pathname+"/heartDiseaseTest",
     type: "post",
