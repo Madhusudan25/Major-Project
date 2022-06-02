@@ -38,9 +38,9 @@ $("#submitDetails").click(() => {
 
 $( document ).ready(function() {
   App.load();
-    console.log( "ready!" );
-    App.loadContract();
-  });
+  console.log( "ready!" );
+  App.loadContract();
+});
 
 $("#testDiabetesbtn").click(()=>{
   $.ajax({
@@ -56,9 +56,7 @@ $("#testDiabetesbtn").click(()=>{
           type: "delete",
           data: {data:d.id},
           success: function (d) {
-            console.log("Hello");
             console.log(d);
-            
           },
           error: function (request, status, error) {
             alert(request.responseJSON.Message);
@@ -100,7 +98,20 @@ $("#testHeartbtn").click(()=>{
     data: {data:window.ethereum.selectedAddress},
     success: function (d) {
       console.log(d);
-      App.addHeartData(d.id,d.hash);
+      App.addHeartData(d.id,d.hash).catch(function(){
+        alert("Test data as been deleted..Please retest!!");
+        $.ajax({
+          url: window.location.pathname+"/deteleLastHeartData",
+          type: "delete",
+          data: {data:d.id},
+          success: function (d) {
+            console.log(d);
+          },
+          error: function (request, status, error) {
+            alert(request.responseJSON.Message);
+          },
+        });
+      })
     },
     error: function (request, status, error) {
       alert(request.responseJSON.Message);
@@ -109,5 +120,36 @@ $("#testHeartbtn").click(()=>{
 })
 
 $("#showHeartDatabtn").click(()=>{
-  App.getHeartData();
+  App.getHeartData().then(function(result){
+    if(result.length===0){
+      alert("You dont have records!!")
+    }
+    else{
+      $.ajax({
+        url: window.location.pathname+"/compareBCandMongoHeartData",
+        type: "post",
+        data: {result:result},
+        success: function (d) {
+          console.log(d.data);
+        },
+        error: function (request, status, error) {
+          alert(request.responseJSON.msg);
+        },
+      });
+    }
+  });
 })
+
+$("#allowSharing").change(()=>{
+      $.ajax({
+        url: window.location.pathname+"/toggleSharing",
+        type: "patch",
+        success: function (d) {
+          console.log(d.data);
+        },
+        error: function (request, status, error) {
+          alert(request.responseJSON.msg);
+        },
+      });
+    }
+)

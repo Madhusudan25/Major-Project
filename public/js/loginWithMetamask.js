@@ -76,7 +76,7 @@ export const App = {
 
   getHeartData: async () => {
     var result= await App.health.getHeartData(window.ethereum.selectedAddress);
-    console.log(result)
+    return (result);
   },
 
 };                                                    

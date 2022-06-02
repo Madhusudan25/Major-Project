@@ -115,12 +115,14 @@ app.post("/admin/addDoctor", (req, res) => {
 
 app.post("/doctor/verify", (req, res) => {
   console.log(req.body.address);
+  var allowedSharingPatients={};
   Doctor.findOne({ publicAddress: req.body.address }, (err, foundDoctor) => {
     if (!err) {
       if (!foundDoctor) {
         res.status(409).json("You are not identified as doctor");
       }
       else{
+        var patients=foundDoctor.patientsList;
         res.status(200).json({ doctorData: foundDoctor.patientsList });
       }
     }
@@ -141,7 +143,8 @@ app.post("/patient/register", (req, res)=> {
           patientPassword:req.body.password,
           patientPublicAddress:req.body.address,
           hospitalId:req.body.hospitalId,
-          doctorId:req.body.doctorId
+          doctorId:req.body.doctorId,
+          allowSharing:false
         })
         console.log(newPatient);
         let patientInfo;
@@ -189,7 +192,18 @@ app.post("/patient/login", (req, res)=> {
 // Handling Machine learning 
 
 app.get("/patient/:id",(req,res)=>{
-  res.render("patientAfterLogin")
+  var allowSharing=false;
+  Patient.findOne({_id:req.params.id},(err,foundPatient)=>{
+    if(err){
+      res.redirect("/error");
+    }
+    else{
+      if(foundPatient){
+        allowSharing=foundPatient.allowSharing;
+        res.render("patientAfterLogin",{sharingState:allowSharing})
+      }
+    }
+  })
 })
 
 app.post("/patient/:id/diabtetesTest",async (req,res)=>{
@@ -356,8 +370,19 @@ app.delete("/patient/:id/deteleLastDiabetesData",(req,res)=>{
   const id=req.params.id;
   console.log(req.body.data);
   Patient.findOne({_id:id},(err,foundPatient)=>{
-    foundPatient.testDiabetesData.pop();
+    var deletedData=foundPatient.testDiabetesData.pop();
     foundPatient.save();
+    res.status(200).json({data:deletedData})
+  })
+})
+
+app.delete("/patient/:id/deteleLastHeartData",(req,res)=>{
+  const id=req.params.id;
+  console.log(req.body.data);
+  Patient.findOne({_id:id},(err,foundPatient)=>{
+    var deletedData=foundPatient.testHeartData.pop();
+    foundPatient.save();
+    res.status(200).json({data:deletedData})
   })
 })
 
@@ -372,6 +397,56 @@ app.post("/patient/:id/compareBCandMongoDiabetesData",(req,res)=>{
     res.status(200).json({data:found.testDiabetesData})
   })
 })
+
+app.post("/patient/:id/compareBCandMongoHeartData",(req,res)=>{
+  const bcResult=req.body.result;
+  Patient.findOne({_id:req.params.id},(err,found)=>{
+    found.testHeartData.forEach(function(data,i) {
+      if(data._id.toString()!==bcResult[i][0] || md5(data)!==bcResult[i][1]){
+        res.status(400).json({"msg":"Data integrity compromised!!"})
+      }
+    });
+    res.status(200).json({data:found.testHeartData})
+  })
+})
+
+app.patch("/patient/:id/toggleSharing",(req,res)=>{
+  var doctorId;
+  var patientId=req.params.id;
+
+  Patient.findOne({_id:patientId},(err,foundPatient)=>{
+    doctorId=foundPatient.doctorId;
+    foundPatient.allowSharing=!foundPatient.allowSharing;
+    foundPatient.save();
+    Doctor.findOne({_id:doctorId},(docErr,foundDoctor)=>{
+      item=foundDoctor.patientsList.id(patientId);
+      item.allowSharing=!item.allowSharing;
+      foundDoctor.save();
+    })
+    res.status(200).json({data:foundPatient.allowSharing})
+  })
+})
+
+app.post("/doctor/viewPatientRecords",(req,res)=>{
+  var patientId=req.body.id;
+  Patient.findOne({_id:patientId},(err,foundPatient)=>{
+    if(err){
+      res.redirect("/error");
+    }
+    else{
+      if(foundPatient){
+        allowSharing=foundPatient.allowSharing;
+        if(allowSharing){
+          res.status(200).json({patientDetails:foundPatient});
+        }
+        else{
+          res.status(409).json({"msg":"You dont have access to patient details"})
+        }
+      }
+    }
+  })
+})
+
 app.listen(3000, (req, res) => {
   console.log("Server is started at port 3000");
 });

@@ -21,7 +21,7 @@ function verifyAccount() {
       console.log("Success");
       console.log(d);
       alert(`Successfully logged in!Redirecting to '/patient/${d.id}`);
-      // window.location.href=`/patient/${d.id}`;
+      window.location.href=`/patient/${d.id}`;
     },
     error: function (request, status, error) {
       $("#loginToMetamask").text("Login to Metamask");

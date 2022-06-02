@@ -37,6 +37,7 @@ const patientSchema = new mongoose.Schema({
   patientPublicAddress: String,
   hospitalId:String,
   doctorId:String,
+  allowSharing:Boolean,
   testDiabetesData: [patientDiabetesDataSchema],
   testHeartData: [patientHeartDiseaseSchema]
 });

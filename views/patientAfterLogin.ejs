@@ -8,6 +8,9 @@
     <br><br>
     <button id="testHeartbtn" class="btn btn-primary">Test Heart Disease</button>
     <button id="showHeartDatabtn" class="btn btn-primary">Get HeartDisease records</button>
+    <br>
+    <% let checked= sharingState? "checked": "" %>
+    <input type="checkbox" id="allowSharing" <%= checked %>>Allow sharing of results
   </body> 
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
