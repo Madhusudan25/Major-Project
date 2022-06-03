@@ -5,9 +5,11 @@ import { App } from "./loginWithMetamask.js";
 $(() => {
   $(window).load(async () => {
     await App.load();
+    await App.loadContract();
     verifyAccount();
   });
 });
+
 
 function verifyAccount() {
   if(window.ethereum.selectedAddress==null){
@@ -35,7 +37,8 @@ function verifyAccount() {
     error: function (request, status, error) {
       $("#content").attr("hidden",true)
       $("#accessMsg").show();
-      alert(request.responseText);
+      alert(request.responseJSON.msg);
+
     },
   });
 }
@@ -64,16 +67,67 @@ function displayContent(patients){
 
 $("body").on ("click", ".viewTestResults", function(e){
   var patientPublicAddress=e.target.name;
-  //Blockchain retrival
-  $.ajax({
-    url: "/doctor/viewPatientRecords",
-    type: "post",
-    data: { id: e.target.value },
-    success: function (d) {
-      // console.log("Success");
-      var details=d.patientDetails;
-      $("#diabetesData").append(`
-        <th>Age</th>
+  App.getPatientDiabetesDataForDoctor(patientPublicAddress).then(function(result){
+    console.log("Blockchain Content : ");
+    console.log(result);
+    if(result.length===0){
+      $("#diabetesContentTable").empty();
+      $("#diabetesContentTable").append(`
+      <p>There are no testing done for diabetes</p>
+      `)
+    }
+    else{
+      $.ajax({
+        url: window.location.pathname+"/compareBCandMongoDiabetesData/doctorDisplay",
+        type: "post",
+        data: {result:result, patientPublicAddress:patientPublicAddress},
+        success: function (d) {
+          fillDiabetesTestData(d.data);
+        },
+        error: function (request, status, error) {
+          alert(request.responseJSON.msg);
+        },
+      });
+    }
+  })
+
+  App.getPatientHeartDataForDoctor(patientPublicAddress).then(function(result){
+    if(result.length===0){
+      $("#heartDataContentTable").empty();
+      $("#heartDataContentTable").append(`
+      <p>There are no testing done for heart</p>
+  `)
+    }
+    else{
+      $.ajax({
+        url: window.location.pathname+"/compareBCandMongoHeartData/doctorDisplay",
+        type: "post",
+        data: {result:result,patientPublicAddress:patientPublicAddress},
+        success: function (d) {
+          fillHeartTestData(d.data);
+        },
+        error: function (request, status, error) {
+          alert(request.responseJSON.msg);
+        },
+      });
+    }
+  });
+})
+
+function fillDiabetesTestData(diabetesDetails) {
+  $("#diabetesContentTable").empty();
+  $("#heartDataContentTable").empty();
+  $("#diabetesContentTable").append(`
+  
+  <thead class="thead-dark">  
+      <tr>
+        <td colspan="10" style="text-align:center;">
+          <b>Diabetes Data</b>
+        </td>
+      </tr>
+      <tr style="text-align:center;">
+        <th>Test no</th>
+        <th>Date and Time</th>
         <th>Pregnancy</th>
         <th>Glucose</th>
         <th>Blood Pressure</th>
@@ -82,14 +136,71 @@ $("body").on ("click", ".viewTestResults", function(e){
         <th>BMI</th>
         <th>Pedigree Function</th>
         <th>Diabetes Test Result</th>
-      `)
-      array.forEach(element => {
-        
-      });
-    },
-    error: function (request, status, error) {
-      alert(request.responseJSON.msg);
-    },
+      </tr>  
+    </thead> 
+  `)
+  diabetesDetails.forEach((detail,i) => {
+    $("#diabetesContentTable").append(`
+    <tr style="text-align:center;">
+        <td>${i+1}</td>
+        <td>${detail.testTimings}</td>
+        <td>${detail.testPregnancies}</td>
+        <td>${detail.testGlucose}</td>
+        <td>${detail.testBloodPressure}</td>
+        <td>${detail.testSkinThickness}</td>
+        <td>${detail.testInsulin}</td>
+        <td>${detail.testBMI}</td>
+        <td>${detail.testPedigreeFunction}</td>
+        <td>${detail.testDiabetesResult}</td>
+    </tr>
+  `)
   });
-})
+}
 
+function fillHeartTestData(heartDetails){
+  $("#heartDataContentTable").append(`
+  <thead class="thead-dark">  
+      <tr>
+        <td colspan="14" style="text-align:center;">
+          <b>Heart Test Data</b>
+        </td>
+      </tr>
+      <tr style="text-align:center;">
+        <th>Test no</th>
+        <th>Date and Time</th>
+        <th>Chest pain</th>
+        <th>Trestbps</th>
+        <th>Cholesterol</th>
+        <th>Fbs</th>
+        <th>Restecg</th>
+        <th>Thalach</th>
+        <th>Exang</th>
+        <th>Oldpeak</th>
+        <th>Slope</th>
+        <th>Ca</th>
+        <th>Thal</th>
+        <th>HeartDisease Test Result</th>
+      </tr>  
+    </thead> 
+  `)
+  heartDetails.forEach((detail,i) => {
+    $("#heartDataContentTable").append(`
+    <tr style="text-align:center;">
+        <td>${i+1}</td>
+        <td>${detail.testTimings}</td>
+        <td>${detail.cp}</td>
+        <td>${detail.trestbps}</td>
+        <td>${detail.chol}</td>
+        <td>${detail.fbs}</td>
+        <td>${detail.restecg}</td>
+        <td>${detail.thalach}</td>
+        <td>${detail.exang}</td>
+        <td>${detail.oldpeak}</td>
+        <td>${detail.slope}</td>
+        <td>${detail.ca}</td>
+        <td>${detail.thal}</td>
+        <td>${detail.testHeartResult}</td>
+    </tr>
+  `)
+  });
+}

@@ -72,6 +72,8 @@ $("#testDiabetesbtn").click(()=>{
 
 $("#showDiabetesDatabtn").click(()=>{
   App.getDiabetesData().then(function(result){
+    console.log("Blockchain Content : ");
+    console.log(result);
     if(result.length===0){
       alert("You dont have records!!")
     }

@@ -13,8 +13,8 @@
     </div iv>
     <div class="container"> 
       <div class="row">
-        <div class="col-4">
-          <table class="table table-striped w-25" id="patientContent" style="text-align: center;margin: 15vh;">
+        <div class="col-12">
+          <table id="patientContent" style="text-align: center;">
             <tr>
               <th>Sl.No</th>
               <th>Patient Name</th>
@@ -25,111 +25,22 @@
           </table>
           <p id="noPatientMsg"></p>
         </div>
-        <div class="col-4">
-            <table>
-              <tr id="diabetesData">
-                <th>Diabetes Info</th>
-              </tr>
-              <tr>
-                <td>Pregnancy</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>Glucose</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>Blood Pressure</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>Skin Thickness</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>Insulin</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>BMI</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>Pedigree Function</td>Pedigree Function
-                <td></td>
-              </tr>
-              <tr>
-                <td>Diabetes Test Result</td>
-                <td></td>
-              </tr>
-            </table>
+      </div>
+    </div><div></div>
+      <div class="row">
+        <div class="col-12">
+          <table id="diabetesContentTable" class="table ">
             
-        </div>
-        <div class="col-4">
-          <table>
-            <tr id="heartData">
-              <th>HeartDisease Info</th>
-            </tr>
-            <tr>
-              <td>sex</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td>cp</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td>trestbps</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td>chol</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td>fbs</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td>restecg</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td>BMI</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td>thalach</td>
-              <td></td>
-            </tr>
-              <td>exang</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td>oldpeak</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td>slope</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td>ca</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td>thal</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td>HeartDisease Test Result</td>
-              <td></td>
-            </tr>
           </table>
         </div>
       </div>
-    </div>
-      
+
+      <div class="row">
+        <div class="col-12">
+          <table id="heartDataContentTable" class="table">
+          </table>
+        </div>
+      </div>
   </body>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
   <script
@@ -137,4 +48,5 @@
     src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.2.7-rc.0/web3.min.js"
   ></script>
   <script src="/js/doctor.js" type="module"></script>
+  <script src="/js/@truffle/contract/dist/truffle-contract.js"></script>
 </html>

@@ -55,17 +55,15 @@ export const App = {
     console.log(App.health);
   },
 
-  // registerPublicAddress: async () => {
-  //   await App.health.setPublicAddress(window.ethereum.selectedAddress,{from : window.ethereum.selectedAddress})
-  // },
-
   addDiabetesData: async (record_id,record_hash) => {
     await App.health.setPatientDiabetesData(window.ethereum.selectedAddress,record_id,record_hash,{from : window.ethereum.selectedAddress});
     console.log("successfully added data")
   },
 
   getDiabetesData: async () => {
+    console.log(window.ethereum.selectedAddress);
     var result= await App.health.getDiabetesData(window.ethereum.selectedAddress);
+    console.log(result);
     return (result);
   },
 
@@ -76,9 +74,23 @@ export const App = {
 
   getHeartData: async () => {
     var result= await App.health.getHeartData(window.ethereum.selectedAddress);
+    console.log(result);
     return (result);
   },
 
+  getPatientDiabetesDataForDoctor: async (publicAddress) => {
+    console.log(publicAddress);
+    var result= await App.health.getDiabetesData(publicAddress);
+    console.log(result);
+    return (result);
+  },
+
+  getPatientHeartDataForDoctor: async (publicAddress) => {
+    console.log(publicAddress);
+    var result= await App.health.getHeartData(publicAddress);
+    console.log(result);
+    return (result);
+  }
 };                                                    
 
 // 26404975793

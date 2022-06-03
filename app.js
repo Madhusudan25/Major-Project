@@ -115,11 +115,10 @@ app.post("/admin/addDoctor", (req, res) => {
 
 app.post("/doctor/verify", (req, res) => {
   console.log(req.body.address);
-  var allowedSharingPatients={};
   Doctor.findOne({ publicAddress: req.body.address }, (err, foundDoctor) => {
     if (!err) {
       if (!foundDoctor) {
-        res.status(409).json("You are not identified as doctor");
+        res.status(409).json({"msg":"You are not identified as doctor"});
       }
       else{
         var patients=foundDoctor.patientsList;
@@ -147,7 +146,7 @@ app.post("/patient/register", (req, res)=> {
           allowSharing:false
         })
         console.log(newPatient);
-        let patientInfo;
+        var patientInfo="";
         await newPatient.save((err,savedPatient)=>{
           console.log(savedPatient);
           patientInfo=savedPatient._id;
@@ -234,7 +233,9 @@ app.post("/patient/:id/diabtetesTest",async (req,res)=>{
           }
           else
           {
+            let time= getCurrentDateTime();
             const data=new PatientDiabetesData({
+              testTimings : time,
               testAge : age,
               testPregnancies : pregnancies,
               testGlucose : glucose,
@@ -264,9 +265,6 @@ app.post("/patient/:id/diabtetesTest",async (req,res)=>{
               else{
                 res.status(404).json({"msg":"couldnot save patientinfo"});
               }
-              
-              
-    
             });
           }
           
@@ -321,7 +319,9 @@ app.post("/patient/:id/heartDiseaseTest",async (req,res)=>{
             }
             else
             {
+              let time= getCurrentDateTime();
               const data=new PatientHeartData({
+                testTimings:time,
                 age:age,
                 sex : sex,
                 cp: cp,
@@ -410,6 +410,31 @@ app.post("/patient/:id/compareBCandMongoHeartData",(req,res)=>{
   })
 })
 
+
+app.post("/doctor/compareBCandMongoDiabetesData/doctorDisplay",(req,res)=>{
+  const bcResult=req.body.result;
+  Patient.findOne({patientPublicAddress:req.body.patientPublicAddress},(err,found)=>{
+    found.testDiabetesData.forEach(function(data,i) {
+      if(data._id.toString()!==bcResult[i][0] || md5(data)!==bcResult[i][1]){
+        res.status(400).json({"msg":"Data integrity compromised!!"})
+      }
+    });
+    res.status(200).json({data:found.testDiabetesData})
+  })
+})
+
+app.post("/doctor/compareBCandMongoHeartData/doctorDisplay",(req,res)=>{
+  const bcResult=req.body.result;
+  Patient.findOne({patientPublicAddress:req.body.patientPublicAddress},(err,found)=>{
+    found.testHeartData.forEach(function(data,i) {
+      if(data._id.toString()!==bcResult[i][0] || md5(data)!==bcResult[i][1]){
+        res.status(400).json({"msg":"Data integrity compromised!!"})
+      }
+    });
+    res.status(200).json({data:found.testHeartData})
+  })
+})
+
 app.patch("/patient/:id/toggleSharing",(req,res)=>{
   var doctorId;
   var patientId=req.params.id;
@@ -437,7 +462,7 @@ app.post("/doctor/viewPatientRecords",(req,res)=>{
       if(foundPatient){
         allowSharing=foundPatient.allowSharing;
         if(allowSharing){
-          res.status(200).json({patientDetails:foundPatient});
+          res.status(200).json({patientDiabetesDetails:foundPatient});
         }
         else{
           res.status(409).json({"msg":"You dont have access to patient details"})
@@ -447,6 +472,25 @@ app.post("/doctor/viewPatientRecords",(req,res)=>{
   })
 })
 
+function getCurrentDateTime(){
+  let date_ob = new Date();
+
+  let date = ("0" + date_ob.getDate()).slice(-2);
+
+  let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+
+  let year = date_ob.getFullYear();
+
+  // current hours
+  let hours = date_ob.getHours();
+
+  // current minutes
+  let minutes = date_ob.getMinutes();
+
+  // prints date & time in DD-MM-YYYY HH:MM format
+  return (date + "-" + month + "-" + year + " " + hours + ":" + minutes);
+
+}
 app.listen(3000, (req, res) => {
   console.log("Server is started at port 3000");
 });

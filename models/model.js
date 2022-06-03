@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
 const patientDiabetesDataSchema=new mongoose.Schema({
+  testTimings: String,
   testAge : Number,
   testPregnancies : Number,
   testGlucose : Number,
@@ -13,6 +14,7 @@ const patientDiabetesDataSchema=new mongoose.Schema({
 });
 
 const patientHeartDiseaseSchema=new mongoose.Schema({
+    testTimings: String,  
     age:Number,  
     sex : Number,
     cp:Number,
