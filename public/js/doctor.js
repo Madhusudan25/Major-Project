@@ -25,14 +25,7 @@ function verifyAccount() {
       console.log(d.doctorData.length);
       $("#accessMsg").hide();
       $("#content").attr("hidden",false);
-     
-      if(d.doctorData.length==0){
-        $("#patientContent").hide();
-        $("#noPatientMsg").append("There are no patients under you!!");
-      }
-      else{
-        displayContent(d.doctorData);
-      }
+      displayContent(d.doctorData);
     },
     error: function (request, status, error) {
       $("#content").attr("hidden",true)
@@ -44,6 +37,11 @@ function verifyAccount() {
 }
 
 function displayContent(patients){
+  if(patients.length===0){
+    $("#patientContent").hide();
+    $("#noPatientMsg").append("There are no patients under you!!");
+    return;
+  }
   var disableButton="";
   $("#patientContent").show();
   $("#noPatientMsg").text("");

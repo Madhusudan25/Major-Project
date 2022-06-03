@@ -17,7 +17,7 @@ function verifyAccount() {
     type: "post",
     data: { address: window.ethereum.selectedAddress },
     success: function (d) {
-      console.log("Logged in");
+      // console.log("Logged in");
       console.log(d.hospitalData);
       $("#accessMsg").hide();
       $("form").attr("hidden",false);
@@ -41,8 +41,6 @@ $("#addDoctor").click(function (e) {
     hospitalPublicAddress: window.ethereum.selectedAddress,
   };
 
-  console.log(doctorData);
-
   $.ajax({
     url: "/admin/addDoctor",
     type: "post",
@@ -54,6 +52,7 @@ $("#addDoctor").click(function (e) {
       $("#doctor_name").val("");
       $("#public_address").val("");
       alert("Doctor added successfully");
+      renderDoctorsInfoInHospital(d.data)
     },
     error: function (request, status, error) {
       alert(request.responseJSON.msg);
@@ -63,8 +62,22 @@ $("#addDoctor").click(function (e) {
 });
 
 function renderDoctorsInfoInHospital(data){
+  $("#doctorsList").empty();
   console.log(data);
-  data.forEach(element => {
-    console.log(element.publicAddress);
+  $("#doctorsList").append(`
+    <tr>
+      <th>Doctor No</th>
+      <th>Doctor Name</th>
+      <th>Doctor Public Address</th>
+    </tr>
+    `)
+  data.forEach((element,i) => {
+    $("#doctorsList").append(`
+    <tr>
+      <td>${i+1}</td>
+      <td>${element.doctorName}</td>
+      <td>${element.publicAddress}</td>
+    </tr>
+    `)
   });
 }

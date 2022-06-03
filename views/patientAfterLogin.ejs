@@ -1,16 +1,64 @@
 <%- include('partials/header') %>
 
 <script src="/js/patientAfterLogin.js" type="module"></script>
+<style>
+  .bd-example-modal-lg .modal-dialog{
+    text-align: center;
+    display: table;
+    position: relative;
+    margin: 0 auto;
+    top: calc(50% - 24px);
+  }
+
+  .bd-example-modal-lg .modal-dialog .modal-content{
+    background-color: transparent;
+    border: none;
+  }
+
+</style>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
   <body>
     <%- include('partials/navbar') %>
-    <button id="testDiabetesbtn" class="btn btn-primary">Test Diabetes</button>
-    <button id="showDiabetesDatabtn" class="btn btn-primary">Get diabetes records</button>
-    <br><br>
-    <button id="testHeartbtn" class="btn btn-primary">Test Heart Disease</button>
-    <button id="showHeartDatabtn" class="btn btn-primary">Get HeartDisease records</button>
-    <br>
-    <% let checked= sharingState? "checked": "" %>
-    <input type="checkbox" id="allowSharing" <%= checked %>>Allow sharing of results
+    <div style="text-align: center;margin-top:20px;">
+      <button id="testDiabetesbtn" class="btn btn-primary">Test Diabetes</button>
+      <button id="showDiabetesDatabtn" class="btn btn-primary">Get diabetes records</button>
+      <br><br>
+      <button id="testHeartbtn" class="btn btn-primary">Test Heart Disease</button>
+      <button id="showHeartDatabtn" class="btn btn-primary">Get HeartDisease records</button>
+      <br>
+      <br>
+      <% let checked= sharingState? "checked": "" %>
+      <input type="checkbox" id="allowSharing" <%= checked %>>Allow sharing of results
+    </div>
+
+    <div class="row">
+      <div class="col-12">
+        <table id="diabetesContentTable" class="table ">
+          
+        </table>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12">
+        <table id="heartDataContentTable" class="table">
+        </table>
+      </div>
+    </div>
+
+
+
+    <div class="modal fade bd-example-modal-lg" data-backdrop="static" data-keyboard="false" tabindex="-1">
+      <div class="modal-dialog modal-sm">
+          <div class="modal-content">
+              <span class="fa fa-spinner fa-spin fa-3x"></span>
+              <p>Please wait while we are testing your data!!</p>
+          </div>
+          
+      </div>
+    </div>
   </body> 
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>

@@ -97,7 +97,7 @@ app.post("/admin/addDoctor", (req, res) => {
                 });
                 foundHospital.doctorsList.push(newDoctor);
                 foundHospital.save();
-                res.status(200).json({success:"Successfully added doctor"});
+                res.status(200).json({success:"Successfully added doctor",data:foundHospital.doctorsList});
               }
               else{
                 res.status(409).json({msg:"Doctor address already exists!!Cannot add"})

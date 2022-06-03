@@ -47,6 +47,9 @@ $("#testDiabetesbtn").click(()=>{
     url: window.location.pathname+"/diabtetesTest",
     type: "post",
     data: {data:window.ethereum.selectedAddress},
+    beforeSend:function(){
+      $('.modal').modal('show');
+    },
     success: function (d) {
       console.log(d);
       App.addDiabetesData(d.id,d.hash).catch(function(){
@@ -63,6 +66,7 @@ $("#testDiabetesbtn").click(()=>{
           },
         });
       })
+      $('.modal').modal('hide');
     },
     error: function (request, status, error) {
       alert(request.responseJSON.Message);
@@ -83,7 +87,7 @@ $("#showDiabetesDatabtn").click(()=>{
         type: "post",
         data: {result:result},
         success: function (d) {
-          console.log(d.data);
+          fillDiabetesTestData(d.data);
         },
         error: function (request, status, error) {
           alert(request.responseJSON.msg);
@@ -98,6 +102,9 @@ $("#testHeartbtn").click(()=>{
     url: window.location.pathname+"/heartDiseaseTest",
     type: "post",
     data: {data:window.ethereum.selectedAddress},
+    beforeSend:function(){
+      $('.modal').modal('show');
+    },
     success: function (d) {
       console.log(d);
       App.addHeartData(d.id,d.hash).catch(function(){
@@ -114,6 +121,7 @@ $("#testHeartbtn").click(()=>{
           },
         });
       })
+      $('.modal').modal('hide');
     },
     error: function (request, status, error) {
       alert(request.responseJSON.Message);
@@ -132,7 +140,7 @@ $("#showHeartDatabtn").click(()=>{
         type: "post",
         data: {result:result},
         success: function (d) {
-          console.log(d.data);
+          fillHeartTestData(d.data);
         },
         error: function (request, status, error) {
           alert(request.responseJSON.msg);
@@ -155,3 +163,96 @@ $("#allowSharing").change(()=>{
       });
     }
 )
+
+function fillDiabetesTestData(diabetesDetails) {
+  $("#diabetesContentTable").empty();
+  $("#heartDataContentTable").empty();
+  $("#diabetesContentTable").append(`
+  
+  <thead class="thead-dark">  
+      <tr>
+        <td colspan="10" style="text-align:center;">
+          <b>Diabetes Data</b>
+        </td>
+      </tr>
+      <tr style="text-align:center;">
+        <th>Test no</th>
+        <th>Date and Time</th>
+        <th>Pregnancy</th>
+        <th>Glucose</th>
+        <th>Blood Pressure</th>
+        <th>Skin Thickness</th>
+        <th>Insulin</th>
+        <th>BMI</th>
+        <th>Pedigree Function</th>
+        <th>Diabetes Test Result</th>
+      </tr>  
+    </thead> 
+  `)
+  diabetesDetails.forEach((detail,i) => {
+    $("#diabetesContentTable").append(`
+    <tr style="text-align:center;">
+        <td>${i+1}</td>
+        <td>${detail.testTimings}</td>
+        <td>${detail.testPregnancies}</td>
+        <td>${detail.testGlucose}</td>
+        <td>${detail.testBloodPressure}</td>
+        <td>${detail.testSkinThickness}</td>
+        <td>${detail.testInsulin}</td>
+        <td>${detail.testBMI}</td>
+        <td>${detail.testPedigreeFunction}</td>
+        <td>${detail.testDiabetesResult}</td>
+    </tr>
+  `)
+  });
+}
+
+function fillHeartTestData(heartDetails){
+  $("#diabetesContentTable").empty();
+  $("#heartDataContentTable").empty();
+  $("#heartDataContentTable").append(`
+  <thead class="thead-dark">  
+      <tr>
+        <td colspan="14" style="text-align:center;">
+          <b>Heart Test Data</b>
+        </td>
+      </tr>
+      <tr style="text-align:center;">
+        <th>Test no</th>
+        <th>Date and Time</th>
+        <th>Chest pain</th>
+        <th>Trestbps</th>
+        <th>Cholesterol</th>
+        <th>Fbs</th>
+        <th>Restecg</th>
+        <th>Thalach</th>
+        <th>Exang</th>
+        <th>Oldpeak</th>
+        <th>Slope</th>
+        <th>Ca</th>
+        <th>Thal</th>
+        <th>HeartDisease Test Result</th>
+      </tr>  
+    </thead> 
+  `)
+  heartDetails.forEach((detail,i) => {
+    $("#heartDataContentTable").append(`
+    <tr style="text-align:center;">
+        <td>${i+1}</td>
+        <td>${detail.testTimings}</td>
+        <td>${detail.cp}</td>
+        <td>${detail.trestbps}</td>
+        <td>${detail.chol}</td>
+        <td>${detail.fbs}</td>
+        <td>${detail.restecg}</td>
+        <td>${detail.thalach}</td>
+        <td>${detail.exang}</td>
+        <td>${detail.oldpeak}</td>
+        <td>${detail.slope}</td>
+        <td>${detail.ca}</td>
+        <td>${detail.thal}</td>
+        <td>${detail.testHeartResult}</td>
+    </tr>
+  `)
+  });
+}
