@@ -43,6 +43,7 @@ $( document ).ready(function() {
 });
 
 $("#testDiabetesbtn").click(()=>{
+  console.log("Initating testing..Please wait!!!");
   $.ajax({
     url: window.location.pathname+"/diabtetesTest",
     type: "post",
@@ -51,15 +52,20 @@ $("#testDiabetesbtn").click(()=>{
       $('.modal').modal('show');
     },
     success: function (d) {
-      console.log(d);
+      console.log("The data obtained after saving into mongoDB \n1.MongoDB ID of latest test data ►►► " + d.id +"\n2.Hash of whole latest test data object ►►► " + d.hash);
+      console.log("→If the user rejects the Transaction...The latest inserted test data in the MongoDB has to be deleted!!");
+      console.log("→If the user confirms the Transaction...the Id and Hash will be stored into blockchain!!");
       App.addDiabetesData(d.id,d.hash).catch(function(){
-        alert("Test data as been deleted..Please retest!!");
+        console.log("The user has rejected the transaction!Iniating delete of last test data from MongoDB!!");
         $.ajax({
           url: window.location.pathname+"/deteleLastDiabetesData",
           type: "delete",
           data: {data:d.id},
           success: function (d) {
-            console.log(d);
+            console.log("The deleted data from mongoDB (Last tested and cancelled transaction) ▼▼▼ ");
+            console.log(d)
+            console.log("Last test data is successfully deleted:(");
+            alert("Test data has been deleted..Please retest!!");
           },
           error: function (request, status, error) {
             alert(request.responseJSON.Message);
@@ -75,18 +81,19 @@ $("#testDiabetesbtn").click(()=>{
 })
 
 $("#showDiabetesDatabtn").click(()=>{
+  console.log("The content in the blockchain for this public address is >> " );
   App.getDiabetesData().then(function(result){
-    console.log("Blockchain Content : ");
-    console.log(result);
     if(result.length===0){
       alert("You dont have records!!")
     }
     else{
+      console.log("Initiating comparision of Blockcain data and MongoDB data to ensure Integrity!!");
       $.ajax({
         url: window.location.pathname+"/compareBCandMongoDiabetesData",
         type: "post",
         data: {result:result},
         success: function (d) {
+          console.log("The data is secure and unaltered!!");
           fillDiabetesTestData(d.data);
         },
         error: function (request, status, error) {
@@ -98,6 +105,7 @@ $("#showDiabetesDatabtn").click(()=>{
 })
 
 $("#testHeartbtn").click(()=>{
+  console.log("Initating testing..Please wait!!!");
   $.ajax({
     url: window.location.pathname+"/heartDiseaseTest",
     type: "post",
@@ -106,15 +114,20 @@ $("#testHeartbtn").click(()=>{
       $('.modal').modal('show');
     },
     success: function (d) {
-      console.log(d);
+      console.log("The data obtained after saving into mongoDB \n1.MongoDB ID of latest test data ►► " + d.id + "\n2.Hash of whole latest test data object ►► " + d.hash);
+      console.log("→If the user rejects the Transaction...The latest inserted test data in the MongoDB has to be deleted!!");
+      console.log("→If the user confirms the Transaction...the Id and Hash will be stored into blockchain!!");
       App.addHeartData(d.id,d.hash).catch(function(){
-        alert("Test data as been deleted..Please retest!!");
+        console.log("The user has rejected the transaction!Iniating delete of last test data from MongoDB!!");
         $.ajax({
           url: window.location.pathname+"/deteleLastHeartData",
           type: "delete",
           data: {data:d.id},
           success: function (d) {
-            console.log(d);
+            console.log("The deleted data from mongoDB (Last tested and cancelled transaction) ▼▼▼");
+            console.log(d)
+            console.log("Last test data is successfully deleted:(");
+            alert("Test data has been deleted..Please retest!!");
           },
           error: function (request, status, error) {
             alert(request.responseJSON.Message);
@@ -130,16 +143,19 @@ $("#testHeartbtn").click(()=>{
 })
 
 $("#showHeartDatabtn").click(()=>{
+  console.log("The content in the blockchain for this public address is ►► " );
   App.getHeartData().then(function(result){
     if(result.length===0){
       alert("You dont have records!!")
     }
     else{
+      console.log("→→Initiating comparision of Blockcain data and MongoDB data to ensure Integrity!!");
       $.ajax({
         url: window.location.pathname+"/compareBCandMongoHeartData",
         type: "post",
         data: {result:result},
         success: function (d) {
+          console.log("→→The data is secure and unaltered!!");
           fillHeartTestData(d.data);
         },
         error: function (request, status, error) {

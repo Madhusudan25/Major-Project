@@ -72,20 +72,19 @@ app.post("/admin/verify", (req, res) => {
 });
 
 app.post("/admin/addDoctor", (req, res) => {
-  console.log(req.body.doctorName);
-  console.log("Address of hospital is :");
-  console.log(req.body.hospitalPublicAddress);
-  console.log(req.body.publicAddress);
+  // console.log(req.body.doctorName);
+  // console.log("Address of hospital is :");
+  // console.log(req.body.hospitalPublicAddress);
+  // console.log(req.body.publicAddress);
   Hospital.findOne({hospitalPublicAddress:req.body.hospitalPublicAddress},(errHospital,foundHospital)=>{
     if(!errHospital){
       if(foundHospital){
         Doctor.findOne(
           { publicAddress: req.body.publicAddress.toLowerCase() },
           function(err, foundDoctor){
-            console.log(foundDoctor);
             if (!err) {
               if (!foundDoctor) {
-                console.log("Doctor not present in DB");
+                // console.log("Doctor not present in DB");
                 const newDoctor = new Doctor({
                   doctorName: req.body.doctorName,
                   publicAddress: req.body.publicAddress.toLowerCase(),
@@ -114,7 +113,6 @@ app.post("/admin/addDoctor", (req, res) => {
 });
 
 app.post("/doctor/verify", (req, res) => {
-  console.log(req.body.address);
   Doctor.findOne({ publicAddress: req.body.address }, (err, foundDoctor) => {
     if (!err) {
       if (!foundDoctor) {
@@ -139,16 +137,16 @@ app.post("/patient/register", (req, res)=> {
           patientName: req.body.patientName,
           patientPhoneNo:req.body.phoneNo,
           patientAge:req.body.age,
+          patientSex:req.body.sex,
           patientPassword:req.body.password,
           patientPublicAddress:req.body.address,
           hospitalId:req.body.hospitalId,
           doctorId:req.body.doctorId,
           allowSharing:false
         })
-        console.log(newPatient);
+        // console.log(newPatient);
         var patientInfo="";
         await newPatient.save((err,savedPatient)=>{
-          console.log(savedPatient);
           patientInfo=savedPatient._id;
         });
         Doctor.findOne({_id:newPatient.doctorId},(err,foundDoctor)=>{
@@ -170,8 +168,6 @@ app.post("/patient/register", (req, res)=> {
 
 app.post("/patient/login", (req, res)=> {
   Patient.findOne({patientPublicAddress:req.body.address},(err,foundPatient)=>{
-    console.log(foundPatient);
-    console.log(req.body);
     if(!err){
       if(foundPatient){
         if(foundPatient.patientPassword !== req.body.password){
@@ -198,8 +194,10 @@ app.get("/patient/:id",(req,res)=>{
     }
     else{
       if(foundPatient){
+        patientAge=foundPatient.patientAge;
+        patientSex=foundPatient.patientSex;
         allowSharing=foundPatient.allowSharing;
-        res.render("patientAfterLogin",{sharingState:allowSharing})
+        res.render("patientAfterLogin",{sharingState:allowSharing,patientAge:patientAge,patientSex:patientSex})
       }
     }
   })
@@ -207,8 +205,8 @@ app.get("/patient/:id",(req,res)=>{
 
 app.post("/patient/:id/diabtetesTest",async (req,res)=>{
   var id=req.params.id;
-  console.log("Mongo Id is : " + id);
-  console.log("Data received is : "+ req.body.data)
+  console.log("Mongo Patient Id is >>> " + id);
+  console.log("Public address of patient received is >>> "+ req.body.data)
 
   var age=generateRandomNumber();
   var pregnancies=generateRandomNumber(0,17);
@@ -224,7 +222,7 @@ app.post("/patient/:id/diabtetesTest",async (req,res)=>{
 
   diabetes_model.stdout.on('data',(data)=>{
       // Cannot use console.log(data)-->It gives buffer value;
-      console.log(`${data}`);
+      console.log(`The result obtained from ML model for diabetes test is >>> ${data}`);
       diabetesResult=Math.round(parseFloat(data))
       Patient.findOne({_id:id},(err,foundPatient)=>{
         if(!err){
@@ -248,7 +246,7 @@ app.post("/patient/:id/diabtetesTest",async (req,res)=>{
             })
             foundPatient.testDiabetesData.push(data);
             foundPatient.save((error,savedPatient)=>{
-              console.log(savedPatient);
+              // console.log(savedPatient);
               if(!error){
                 if(savedPatient)
                 {var dataTestedArray=savedPatient.testDiabetesData;
@@ -257,13 +255,15 @@ app.post("/patient/:id/diabtetesTest",async (req,res)=>{
         
                   var lastTestedDataHash=md5(lastTestedData);
         
-                  console.log(lastTestedData);
-                  console.log(lastTestedDataMongoId);
-                  console.log(lastTestedDataHash);
+                  // console.log(lastTestedData);
+
+                  console.log("The MongoDB Id of the last tested data  >>>> " + lastTestedDataMongoId);
+                  console.log("The hash of the last tested data object >>>> " + lastTestedDataHash);
+
                   res.status(200).json({"id":lastTestedDataMongoId,"hash":lastTestedDataHash});}
               }
               else{
-                res.status(404).json({"msg":"couldnot save patientinfo"});
+                res.status(404).json({"msg":"Could not save patientinfo"});
               }
             });
           }
@@ -310,7 +310,7 @@ app.post("/patient/:id/heartDiseaseTest",async (req,res)=>{
     const  heart_model=spawn('python',['Python_files/heart_prediction.py',[age,sex,cp,trestbps,chol,fbs,restecg,thalach,exang,oldpeak,slope,ca,thal]]);
 
     heart_model.stdout.on('data',(data)=>{
-        console.log(`${data}`);
+      console.log(`The result obtained from ML model for Heart test is >>> ${data}`);
         value=`${data}`;
         Patient.findOne({_id:id},(err,foundPatient)=>{
           if(!err){
@@ -340,7 +340,7 @@ app.post("/patient/:id/heartDiseaseTest",async (req,res)=>{
       
               foundPatient.testHeartData.push(data);
               foundPatient.save((error,savedPatient)=>{
-                console.log(savedPatient);
+                // console.log(savedPatient);
                 if(!error){
                   if(savedPatient)
                   {var dataTestedArray=savedPatient.testHeartData;
@@ -349,9 +349,9 @@ app.post("/patient/:id/heartDiseaseTest",async (req,res)=>{
           
                     var lastTestedDataHash=md5(lastTestedData);
           
-                    console.log(lastTestedData);
-                    console.log(lastTestedDataMongoId);
-                    console.log(lastTestedDataHash);
+                    console.log("The MongoDB Id of the last tested data  >>>> " + lastTestedDataMongoId);
+                    console.log("The hash of the last tested data object >>>> " + lastTestedDataHash);
+
                     res.status(200).json({"id":lastTestedDataMongoId,"hash":lastTestedDataHash});}
                 }
                 else{
@@ -368,7 +368,7 @@ app.post("/patient/:id/heartDiseaseTest",async (req,res)=>{
 
 app.delete("/patient/:id/deteleLastDiabetesData",(req,res)=>{
   const id=req.params.id;
-  console.log(req.body.data);
+  // console.log(req.body.data);
   Patient.findOne({_id:id},(err,foundPatient)=>{
     var deletedData=foundPatient.testDiabetesData.pop();
     foundPatient.save();
@@ -378,7 +378,7 @@ app.delete("/patient/:id/deteleLastDiabetesData",(req,res)=>{
 
 app.delete("/patient/:id/deteleLastHeartData",(req,res)=>{
   const id=req.params.id;
-  console.log(req.body.data);
+  // console.log(req.body.data);
   Patient.findOne({_id:id},(err,foundPatient)=>{
     var deletedData=foundPatient.testHeartData.pop();
     foundPatient.save();

@@ -21,7 +21,116 @@
 
   <body>
     <%- include('partials/navbar') %>
-    <div style="text-align: center;margin-top:20px;">
+
+    <div class="container" >
+      <div class="row">
+        <div class="col">
+          <div style="width: 50%; margin: 30px auto;position: relative;">
+            <div class="mb-3">
+              <label for="exampleFormControlInput1" class="form-label">Patient Age</label>
+              <input type="number" class="form-control" name="testAge" id="testAgeDiabetes" value=<%=patientAge%> disabled>
+            </div>
+            <div class="mb-3">
+              <label for="exampleFormControlInput1" class="form-label">Pregnancies</label>
+              <input class="form-control" type="number" name="testPregnancies" id="testPregnancies" placeholder="Pregnancies">
+            </div>
+            <div class="mb-3">
+              <label for="exampleFormControlInput1" class="form-label">Glucose</label>
+              <input class="form-control" type="number" name="testGlucose" id="testGlucose" placeholder="Glucose">
+            </div>
+            <div class="mb-3">
+              <label for="exampleFormControlInput1" class="form-label">Blood Pressure</label>
+              <input class="form-control" type="number" name="testBloodPressure" id="testBloodPressure" placeholder="Sex">
+            </div>
+            <div class="mb-3">
+              <label for="exampleFormControlInput1" class="form-label">Skin Thickness</label>
+              <input class="form-control" type="number" name="testSkinThickness" id="testSkinThickness" placeholder="Skin Thickness" >
+            </div>
+            <div class="mb-3">
+              <label for="exampleFormControlInput1" class="form-label">Insulin</label>
+              <input class="form-control" type="number" name="testInsulin" id="testInsulin" placeholder="Insulin" >
+            </div>
+            <div class="mb-3">
+              <label for="exampleFormControlInput1" class="form-label">BMI</label>
+              <input class="form-control" type="number" name="testBMI" id="testBMI" placeholder="testBMI" >
+            </div>
+            <div class="mb-3">
+              <label for="exampleFormControlInput1" class="form-label">Pedigree Function</label>
+              <input class="form-control" type="number" name="testPedigreeFunction" id="testPedigreeFunction" placeholder="Pedigree Function" >
+            </div>
+            <div style="text-align: center;margin-top:20px;">
+              <button id="testDiabetesbtn" class="btn btn-primary">Test Diabetes</button>
+              <br><br>
+              <button id="showDiabetesDatabtn" class="btn btn-primary">Get diabetes records</button>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div style="width: 50%; margin: 30px auto;position: relative;">
+            <div class="mb-3">
+              <label for="exampleFormControlInput1" class="form-label">Patient Age</label>
+              <input type="number" class="form-control" name="testAge" id="testAgeHeart" value=<%=patientAge%> disabled>
+            </div>
+            <div class="mb-3">
+              <label for="exampleFormControlInput1" class="form-label">Sex</label>
+              <input class="form-control" type="text" name="sex" id="sex" placeholder="Sex" value=<%=patientSex%> disabled>
+            </div>
+            <div class="mb-3">
+              <label for="exampleFormControlInput1" class="form-label">Chest Pain Type</label>
+              <input class="form-control" type="number" name="cp" id="cp" placeholder="Chest Pain">
+            </div>
+            <div class="mb-3">
+              <label for="exampleFormControlInput1" class="form-label">Resting BP</label>
+              <input class="form-control" type="number" name="trestbps" id="trestbps" placeholder="Resting Blood Pressure">
+            </div>
+            <div class="mb-3">
+              <label for="exampleFormControlInput1" class="form-label">Cholesterol</label>
+              <input class="form-control" type="number" name="chol" id="chol" placeholder="Cholesterol" >
+            </div>
+            <div class="mb-3">
+              <label for="exampleFormControlInput1" class="form-label">Fasting Blood Sugar</label>
+              <input class="form-control" type="number" name="fbs" id="fbs" placeholder="Fasting Blood Sugar" >
+            </div>
+            <div class="mb-3">
+              <label for="exampleFormControlInput1" class="form-label">Resting Electrocardiographic</label>
+              <input class="form-control" type="number" name="restecg" id="restecg" placeholder="Resting Electrocardiographic" >
+            </div>
+            <div class="mb-3">
+              <label for="exampleFormControlInput1" class="form-label">Maximum Heart Rate Achieved (Thalach)</label>
+              <input class="form-control" type="number" name="thalach" id="thalach" placeholder="Thalach value" >
+            </div>
+            <div class="mb-3">
+              <label for="exampleFormControlInput1" class="form-label">Exercise Induced Angina (Exang)</label>
+              <input class="form-control" type="number" name="exang" id="exang" placeholder="Excercise Induced Angina" >
+            </div>
+            <div class="mb-3">
+              <label for="exampleFormControlInput1" class="form-label">ST depression (Oldpeak)</label>
+              <input class="form-control" type="number" name="oldpeak" id="oldpeak" placeholder="Oldpeak" >
+            </div>
+            <div class="mb-3">
+              <label for="exampleFormControlInput1" class="form-label">Slope of the peak exercise</label>
+              <input class="form-control" type="number" name="slope" id="slope" placeholder="Slope" >
+            </div>
+            <div class="mb-3">
+              <label for="exampleFormControlInput1" class="form-label">Number of major vessels (CA)</label>
+              <input class="form-control" type="number" name="ca" id="ca" placeholder="Coronary Arteries" >
+            </div>
+            <div class="mb-3">
+              <label for="exampleFormControlInput1" class="form-label">Defect Value (Thal)</label>
+              <input class="form-control" type="number" name="thal" id="thal" placeholder="Thal" >
+            </div>
+            <div style="text-align: center;margin-top:20px;">
+              <button id="testHeartbtn" class="btn btn-primary">Test Heart Disease</button>
+              <br><br>
+              <button id="showHeartDatabtn" class="btn btn-primary">Get HeartDisease records</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- <div style="text-align: center;margin-top:20px;">
       <button id="testDiabetesbtn" class="btn btn-primary">Test Diabetes</button>
       <button id="showDiabetesDatabtn" class="btn btn-primary">Get diabetes records</button>
       <br><br>
@@ -29,10 +138,13 @@
       <button id="showHeartDatabtn" class="btn btn-primary">Get HeartDisease records</button>
       <br>
       <br>
+      
+    </div> -->
+    <div style="text-align: center;">
       <% let checked= sharingState? "checked": "" %>
       <input type="checkbox" id="allowSharing" <%= checked %>>Allow sharing of results
     </div>
-
+   
     <div class="row">
       <div class="col-12">
         <table id="diabetesContentTable" class="table ">

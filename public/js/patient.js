@@ -28,6 +28,7 @@ function verifyAccount() {
     patientName:$("#patientName").val(),
     phoneNo:$("#phoneNo").val(),
     age:$("#age").val(),
+    sex:$("#sex").val(),
     password:$("#password").val(),
     address: window.ethereum.selectedAddress,
     hospitalId:$("#hospitalDetails").val(),

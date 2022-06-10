@@ -35,6 +35,7 @@ const patientSchema = new mongoose.Schema({
   patientName: String,
   patientPhoneNo:String,
   patientAge:Number,
+  patientSex:String,
   patientPassword:String,
   patientPublicAddress: String,
   hospitalId:String,
