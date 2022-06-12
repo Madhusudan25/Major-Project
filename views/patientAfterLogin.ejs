@@ -1,8 +1,10 @@
 <%- include('partials/header') %>
 
 <script src="/js/patientAfterLogin.js" type="module"></script>
+<link rel="stylesheet" href="/css/patientAfterLogin.css">
+
 <style>
-  .bd-example-modal-lg .modal-dialog{
+  .bd-example-modal-lg .loadingModal{
     text-align: center;
     display: table;
     position: relative;
@@ -10,126 +12,272 @@
     top: calc(50% - 24px);
   }
 
-  .bd-example-modal-lg .modal-dialog .modal-content{
+  .bd-example-modal-lg .loadingModal .loadingContent{
     background-color: transparent;
     border: none;
   }
 
 </style>
 
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-
   <body>
     <%- include('partials/navbar') %>
 
-    <div class="container" >
+    <div class="container" style="text-align: center; width: 75%;margin-top: 50px;">
       <div class="row">
         <div class="col">
-          <div style="width: 50%; margin: 30px auto;position: relative;">
-            <div class="mb-3">
-              <label for="exampleFormControlInput1" class="form-label">Patient Age</label>
-              <input type="number" class="form-control" name="testAge" id="testAgeDiabetes" value=<%=patientAge%> disabled>
-            </div>
-            <div class="mb-3">
-              <label for="exampleFormControlInput1" class="form-label">Pregnancies</label>
-              <input class="form-control" type="number" name="testPregnancies" id="testPregnancies" placeholder="Pregnancies">
-            </div>
-            <div class="mb-3">
-              <label for="exampleFormControlInput1" class="form-label">Glucose</label>
-              <input class="form-control" type="number" name="testGlucose" id="testGlucose" placeholder="Glucose">
-            </div>
-            <div class="mb-3">
-              <label for="exampleFormControlInput1" class="form-label">Blood Pressure</label>
-              <input class="form-control" type="number" name="testBloodPressure" id="testBloodPressure" placeholder="Sex">
-            </div>
-            <div class="mb-3">
-              <label for="exampleFormControlInput1" class="form-label">Skin Thickness</label>
-              <input class="form-control" type="number" name="testSkinThickness" id="testSkinThickness" placeholder="Skin Thickness" >
-            </div>
-            <div class="mb-3">
-              <label for="exampleFormControlInput1" class="form-label">Insulin</label>
-              <input class="form-control" type="number" name="testInsulin" id="testInsulin" placeholder="Insulin" >
-            </div>
-            <div class="mb-3">
-              <label for="exampleFormControlInput1" class="form-label">BMI</label>
-              <input class="form-control" type="number" name="testBMI" id="testBMI" placeholder="testBMI" >
-            </div>
-            <div class="mb-3">
-              <label for="exampleFormControlInput1" class="form-label">Pedigree Function</label>
-              <input class="form-control" type="number" name="testPedigreeFunction" id="testPedigreeFunction" placeholder="Pedigree Function" >
-            </div>
-            <div style="text-align: center;margin-top:20px;">
-              <button id="testDiabetesbtn" class="btn btn-primary">Test Diabetes</button>
-              <br><br>
-              <button id="showDiabetesDatabtn" class="btn btn-primary">Get diabetes records</button>
-            </div>
-          </div>
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleDiabetesModal" id="enterDiabetesData">
+            Enter Diabetes Test Data
+          </button>
+          <br><br>
+          <button id="showDiabetesDatabtn" class="btn btn-primary">Show Diabetes Records</button>
         </div>
         <div class="col">
-          <div style="width: 50%; margin: 30px auto;position: relative;">
-            <div class="mb-3">
-              <label for="exampleFormControlInput1" class="form-label">Patient Age</label>
-              <input type="number" class="form-control" name="testAge" id="testAgeHeart" value=<%=patientAge%> disabled>
-            </div>
-            <div class="mb-3">
-              <label for="exampleFormControlInput1" class="form-label">Sex</label>
-              <input class="form-control" type="text" name="sex" id="sex" placeholder="Sex" value=<%=patientSex%> disabled>
-            </div>
-            <div class="mb-3">
-              <label for="exampleFormControlInput1" class="form-label">Chest Pain Type</label>
-              <input class="form-control" type="number" name="cp" id="cp" placeholder="Chest Pain">
-            </div>
-            <div class="mb-3">
-              <label for="exampleFormControlInput1" class="form-label">Resting BP</label>
-              <input class="form-control" type="number" name="trestbps" id="trestbps" placeholder="Resting Blood Pressure">
-            </div>
-            <div class="mb-3">
-              <label for="exampleFormControlInput1" class="form-label">Cholesterol</label>
-              <input class="form-control" type="number" name="chol" id="chol" placeholder="Cholesterol" >
-            </div>
-            <div class="mb-3">
-              <label for="exampleFormControlInput1" class="form-label">Fasting Blood Sugar</label>
-              <input class="form-control" type="number" name="fbs" id="fbs" placeholder="Fasting Blood Sugar" >
-            </div>
-            <div class="mb-3">
-              <label for="exampleFormControlInput1" class="form-label">Resting Electrocardiographic</label>
-              <input class="form-control" type="number" name="restecg" id="restecg" placeholder="Resting Electrocardiographic" >
-            </div>
-            <div class="mb-3">
-              <label for="exampleFormControlInput1" class="form-label">Maximum Heart Rate Achieved (Thalach)</label>
-              <input class="form-control" type="number" name="thalach" id="thalach" placeholder="Thalach value" >
-            </div>
-            <div class="mb-3">
-              <label for="exampleFormControlInput1" class="form-label">Exercise Induced Angina (Exang)</label>
-              <input class="form-control" type="number" name="exang" id="exang" placeholder="Excercise Induced Angina" >
-            </div>
-            <div class="mb-3">
-              <label for="exampleFormControlInput1" class="form-label">ST depression (Oldpeak)</label>
-              <input class="form-control" type="number" name="oldpeak" id="oldpeak" placeholder="Oldpeak" >
-            </div>
-            <div class="mb-3">
-              <label for="exampleFormControlInput1" class="form-label">Slope of the peak exercise</label>
-              <input class="form-control" type="number" name="slope" id="slope" placeholder="Slope" >
-            </div>
-            <div class="mb-3">
-              <label for="exampleFormControlInput1" class="form-label">Number of major vessels (CA)</label>
-              <input class="form-control" type="number" name="ca" id="ca" placeholder="Coronary Arteries" >
-            </div>
-            <div class="mb-3">
-              <label for="exampleFormControlInput1" class="form-label">Defect Value (Thal)</label>
-              <input class="form-control" type="number" name="thal" id="thal" placeholder="Thal" >
-            </div>
-            <div style="text-align: center;margin-top:20px;">
-              <button id="testHeartbtn" class="btn btn-primary">Test Heart Disease</button>
-              <br><br>
-              <button id="showHeartDatabtn" class="btn btn-primary">Get HeartDisease records</button>
-            </div>
-          </div>
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleHeartModal" id="enterHeartData">
+            Enter Heart Test Data
+          </button>
+          <br><br>
+          <button id="showHeartDatabtn" class="btn btn-primary">Show Heart Disease Records</button>
         </div>
       </div>
     </div>
 
+<!--Diabetes Modal -->
+<div class="modal fade" id="exampleDiabetesModal" role="dialog" aria-labelledby="exampleDiabetesModalTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleDiabetesModalTitle">Enter Diabetes Data</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div style="width: 60%; margin: 30px auto;position: relative;">
+          
+          <label for="testAgeDiabetes" class="form-label">Patient Age</label>
+          <div class="input-group mb-2 mr-sm-2">
+            <input type="number" class="form-control rounded" name="testAge" id="testAgeDiabetes" value=<%=patientAge%> disabled>
+            <div class="input-group-prepend">
+              <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Age"><i class="fa-solid fa-info"></i></div>
+            </div>
+          </div>
+          <label for="testPregnancies" class="form-label">Pregnancies</label>
+          <div class="input-group mb-2 mr-sm-2">
+            <input class="form-control rounded diabetesClear" type="number" name="testPregnancies" id="testPregnancies" placeholder="Pregnancies">
+            <div class="input-group-prepend">
+                <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Age"><i class="fa-solid fa-info"></i></div>
+              </div>
+          </div>
+          <label for="testGlucose" class="form-label">Glucose</label>
+          <div class="input-group mb-2 mr-sm-2">
+            <input class="form-control rounded diabetesClear" type="number" name="testGlucose" id="testGlucose" placeholder="Glucose">
+            <div class="input-group-prepend">
+                <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Age"><i class="fa-solid fa-info"></i></div>
+              </div>
+          </div>
+          <label for="testBloodPressure" class="form-label">Blood Pressure</label>
+          <div class="input-group mb-2 mr-sm-2">
+            <input class="form-control rounded diabetesClear" type="number" name="testBloodPressure" id="testBloodPressure" placeholder="Blood Pressure">
+            <div class="input-group-prepend">
+                <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Age"><i class="fa-solid fa-info"></i></div>
+              </div>
+          </div>
+          <label for="testSkinThickness" class="form-label">Skin Thickness</label>
+          <div class="input-group mb-2 mr-sm-2">
+            <input class="form-control rounded diabetesClear" type="number" name="testSkinThickness" id="testSkinThickness" placeholder="Skin Thickness" >
+            <div class="input-group-prepend">
+                <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Age"><i class="fa-solid fa-info"></i></div>
+              </div>
+          </div>
+          <label for="testInsulin" class="form-label">Insulin</label>
+          <div class="input-group mb-2 mr-sm-2">
+            <input class="form-control rounded diabetesClear" type="number" name="testInsulin" id="testInsulin" placeholder="Insulin" >
+            <div class="input-group-prepend">
+                <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Age"><i class="fa-solid fa-info"></i></div>
+              </div>
+          </div>
+          <label for="testBMI" class="form-label">BMI</label>
+          <div class="input-group mb-3">
+            <input class="form-control rounded diabetesClear" type="number" name="testBMI" id="testBMI" placeholder="testBMI" >
+            <div class="input-group-prepend">
+                <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Age"><i class="fa-solid fa-info"></i></div>
+              </div>
+          </div>
+          <label for="testPedigreeFunction" class="form-label">Pedigree Function</label>
+          <div class="input-group mb-2 mr-sm-2">
+            <input class="form-control rounded diabetesClear" type="number" name="testPedigreeFunction" id="testPedigreeFunction" placeholder="Pedigree Function" >
+            <div class="input-group-prepend">
+                <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Age"><i class="fa-solid fa-info"></i></div>
+              </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="testDiabetesbtn">Test Diabetes</button>
+      </div>
+    </div>
+  </div>
+</div>
 
+<!--Heart Modal -->
+<div class="modal fade" id="exampleHeartModal" role="dialog" aria-labelledby="exampleHeartModalTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleHeartModalTitle">Enter Heart Data</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div style="width: 60%; margin: 30px auto;position: relative;">
+          <label for="testAgeHeart" class="form-label">Patient Age</label>
+          <div class="input-group mb-2 mr-sm-2">
+            <input type="number" class="form-control rounded" name="testAge" id="testAgeHeart" value=<%=patientAge%> disabled>
+            <div class="input-group-prepend">
+              <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Age"><i class="fa-solid fa-info"></i></div>
+            </div>
+          </div>
+          <label for="sex" class="form-label">Sex</label>
+          <div class="input-group mb-2 mr-sm-2">
+            <input class="form-control rounded" type="text" name="sex" id="sex" placeholder="Sex" value=<%=patientSex%> disabled>
+            <div class="input-group-prepend">
+                <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Age"><i class="fa-solid fa-info"></i></div>
+              </div>
+          </div>
+          <label for="cp" class="form-label">Chest Pain Type</label>
+          <div class="input-group mb-2 mr-sm-2">
+            <!-- <input class="form-control rounded heartClear" type="option" name="cp" id="cp" placeholder="Chest Pain"> -->
+
+            <select id="cp" class="form-control rounded heartClear">
+              <option value="" disabled selected>Choose...</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+            </select>
+
+            <div class="input-group-prepend">
+                <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Age"><i class="fa-solid fa-info"></i></div>
+              </div>
+          </div>
+          <label for="trestbps" class="form-label">Resting BP</label>
+          <div class="input-group mb-2 mr-sm-2">
+            <input class="form-control rounded heartClear" type="number" name="trestbps" id="trestbps" placeholder="Resting Blood Pressure">
+            <div class="input-group-prepend">
+                <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Age"><i class="fa-solid fa-info"></i></div>
+              </div>
+          </div>
+          <label for="chol" class="form-label">Cholesterol</label>
+          <div class="input-group mb-2 mr-sm-2">
+            <input class="form-control rounded heartClear" type="number" name="chol" id="chol" placeholder="Cholesterol" >
+            <div class="input-group-prepend">
+                <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Age"><i class="fa-solid fa-info"></i></div>
+              </div>
+          </div>
+          <label for="fbs" class="form-label">Fasting Blood Sugar</label>
+          <div class="input-group mb-2 mr-sm-2">
+            <!-- <input class="form-control rounded heartClear" type="number" name="fbs" id="fbs" placeholder="Fasting Blood Sugar" > -->
+            <select id="fbs" class="form-control rounded heartClear">
+              <option value="" disabled selected>Choose...</option>
+              <option value="0">0</option>
+              <option value="1">1</option>
+            </select>
+            <div class="input-group-prepend">
+                <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Age"><i class="fa-solid fa-info"></i></div>
+              </div>
+          </div>
+          <label for="restecg" class="form-label">Resting Electrocardiographic</label>
+          <div class="input-group mb-2 mr-sm-2">
+            <!-- <input class="form-control rounded heartClear" type="number" name="restecg" id="restecg" placeholder="Resting Electrocardiographic" > -->
+            <select id="restecg" class="form-control rounded heartClear">
+              <option value="" disabled selected>Choose...</option>
+              <option value="0">0</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+            </select>
+            
+            <div class="input-group-prepend">
+                <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Age"><i class="fa-solid fa-info"></i></div>
+              </div>
+          </div>
+          <label for="thalach" class="form-label">Maximum Heart Rate Achieved (Thalach)</label>
+          <div class="input-group mb-2 mr-sm-2">
+            <input class="form-control rounded heartClear" type="number" name="thalach" id="thalach" placeholder="Thalach value" >
+            <div class="input-group-prepend">
+                <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Age"><i class="fa-solid fa-info"></i></div>
+              </div>
+          </div>
+          <label for="exang" class="form-label">Exercise Induced Angina (Exang)</label>
+          <div class="input-group mb-2 mr-sm-2">
+            <!-- <input class="form-control rounded heartClear" type="number" name="exang" id="exang" placeholder="Excercise Induced Angina" > -->
+            <select id="exang" class="form-control rounded heartClear">
+              <option value="" disabled selected>Choose...</option>
+              <option value="0">0</option>
+              <option value="1">1</option>
+            </select>
+            <div class="input-group-prepend">
+                <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Age"><i class="fa-solid fa-info"></i></div>
+              </div>
+          </div>
+          <label for="oldpeak" class="form-label">ST depression (Oldpeak)</label>
+          <div class="input-group mb-2 mr-sm-2">
+            <input class="form-control rounded heartClear" type="number" name="oldpeak" id="oldpeak" placeholder="Oldpeak" >
+            <div class="input-group-prepend">
+                <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Age"><i class="fa-solid fa-info"></i></div>
+              </div>
+          </div>
+          <label for="slope" class="form-label">Slope of the peak exercise</label>
+          <div class="input-group mb-2 mr-sm-2">
+            <!-- <input class="form-control rounded heartClear" type="number" name="slope" id="slope" placeholder="Slope" > -->
+            <select id="slope" class="form-control rounded heartClear">
+              <option value="" disabled selected>Choose...</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+            </select>
+            <div class="input-group-prepend">
+                <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Age"><i class="fa-solid fa-info"></i></div>
+              </div>
+          </div>
+          <label for="ca" class="form-label">Number of major vessels (CA)</label>
+          <div class="input-group mb-2 mr-sm-2">
+            <!-- <input class="form-control rounded heartClear" type="number" name="ca" id="ca" placeholder="Coronary Arteries" > -->
+            <select id="ca" class="form-control rounded heartClear">
+              <option value="" disabled selected>Choose...</option>
+              <option value="0">0</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+            </select>
+            <div class="input-group-prepend">
+                <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Age"><i class="fa-solid fa-info"></i></div>
+              </div>
+          </div>
+          <label for="thal" class="form-label">Defect Value (Thal)</label>
+          <div class="input-group mb-2 mr-sm-2">
+            <!-- <input class="form-control rounded heartClear" type="number" name="thal" id="thal" placeholder="Thal" > -->
+            <select id="thal" class="form-control rounded heartClear">
+              <option value="" disabled selected>Choose...</option>
+              <option value="3">3</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+            </select>
+            <div class="input-group-prepend">
+                <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Age"><i class="fa-solid fa-info"></i></div>
+              </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary"  id="testHeartbtn">Test Heart Disease</button>
+      </div>
+    </div>
+    </div>
+  </div>
+</div>
     <!-- <div style="text-align: center;margin-top:20px;">
       <button id="testDiabetesbtn" class="btn btn-primary">Test Diabetes</button>
       <button id="showDiabetesDatabtn" class="btn btn-primary">Get diabetes records</button>
@@ -161,16 +309,15 @@
     </div>
 
 
-
-    <div class="modal fade bd-example-modal-lg" data-backdrop="static" data-keyboard="false" tabindex="-1">
-      <div class="modal-dialog modal-sm">
-          <div class="modal-content">
+    <div class="modal fade bd-example-modal-lg loader" data-backdrop="static" data-keyboard="false" tabindex="-1">
+      <div class="modal-dialog modal-sm loadingModal">
+          <div class="modal-content loadingContent">
               <span class="fa fa-spinner fa-spin fa-3x"></span>
               <p>Please wait while we are testing your data!!</p>
           </div>
-          
       </div>
     </div>
+
   </body> 
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>

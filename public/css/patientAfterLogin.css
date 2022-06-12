@@ -1,0 +1,8 @@
+.input-group-text{
+    margin: auto 0 auto 5px;
+}
+
+.input-group-prepend{
+    display: flex;
+}
+

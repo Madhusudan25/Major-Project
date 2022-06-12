@@ -21,9 +21,7 @@ contract MajorProject {
         string memory _recordHash
     ) public {
         patientPublicAddress = publicAddress;
-        if (DiabetesData[publicAddress].length == 0) {
-            delete DiabetesRecords;
-        }
+        DiabetesRecords=DiabetesData[publicAddress];
         DiabetesRecords.push(PatientHealthData(_recordId, _recordHash));
         DiabetesData[publicAddress] = DiabetesRecords;
     }
@@ -42,9 +40,7 @@ contract MajorProject {
         string memory _recordHash
     ) public {
         patientPublicAddress = publicAddress;
-        if (HeartData[publicAddress].length == 0) {
-            delete HeartRecords;
-        }
+        HeartRecords=HeartData[publicAddress];
         HeartRecords.push(PatientHealthData(_recordId, _recordHash));
         HeartData[publicAddress] = HeartRecords;
     }

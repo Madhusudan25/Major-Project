@@ -144,23 +144,20 @@ app.post("/patient/register", (req, res)=> {
           doctorId:req.body.doctorId,
           allowSharing:false
         })
-        // console.log(newPatient);
-        var patientInfo="";
         await newPatient.save((err,savedPatient)=>{
-          patientInfo=savedPatient._id;
+          Doctor.findOne({_id:newPatient.doctorId},(err,foundDoctor)=>{
+            if(!err){
+              if(foundDoctor){
+                foundDoctor.patientsList.push(newPatient);
+                foundDoctor.save();
+                res.status(200).json({"id":savedPatient._id});
+              }
+              else{
+                res.status(409).json({"Message":"Doctor not found"});
+              }
+            }
+          })
         });
-        Doctor.findOne({_id:newPatient.doctorId},(err,foundDoctor)=>{
-          if(!err){
-            if(foundDoctor){
-              foundDoctor.patientsList.push(newPatient);
-              foundDoctor.save();
-              res.status(200).json({"id":patientInfo});
-            }
-            else{
-              res.status(409).json({"Message":"Doctor not found"});
-            }
-          }
-        })
       }
     }
   })
@@ -482,10 +479,10 @@ function getCurrentDateTime(){
   let year = date_ob.getFullYear();
 
   // current hours
-  let hours = date_ob.getHours();
+  let hours = ("0" + date_ob.getHours()).slice(-2);
 
   // current minutes
-  let minutes = date_ob.getMinutes();
+  let minutes =  ("0" + date_ob.getMinutes()).slice(-2);
 
   // prints date & time in DD-MM-YYYY HH:MM format
   return (date + "-" + month + "-" + year + " " + hours + ":" + minutes);

@@ -36,11 +36,23 @@ $("#submitDetails").click(() => {
   verifyAccount();
 });
 
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+
 $( document ).ready(function() {
   App.load();
   console.log( "ready!" );
   App.loadContract();
 });
+
+$("#enterDiabetesData").click(()=>{
+  $(".diabetesClear").val("");
+})
+
+$("#enterHeartData").click(()=>{
+  $(".heartClear").val("");
+})
 
 $("#testDiabetesbtn").click(()=>{
   console.log("Initating testing..Please wait!!!");
@@ -49,14 +61,16 @@ $("#testDiabetesbtn").click(()=>{
     type: "post",
     data: {data:window.ethereum.selectedAddress},
     beforeSend:function(){
-      $('.modal').modal('show');
+      $('.loader').modal('show');
     },
     success: function (d) {
       console.log("The data obtained after saving into mongoDB \n1.MongoDB ID of latest test data ►►► " + d.id +"\n2.Hash of whole latest test data object ►►► " + d.hash);
       console.log("→If the user rejects the Transaction...The latest inserted test data in the MongoDB has to be deleted!!");
       console.log("→If the user confirms the Transaction...the Id and Hash will be stored into blockchain!!");
-      App.addDiabetesData(d.id,d.hash).catch(function(){
-        console.log("The user has rejected the transaction!Iniating delete of last test data from MongoDB!!");
+      App.addDiabetesData(d.id,d.hash).then(()=>{
+        $("body").addClass("modal-open")
+      }).catch(function(){
+        console.log("The user has rejected the transaction!Initiating delete of last test data from MongoDB!!");
         $.ajax({
           url: window.location.pathname+"/deteleLastDiabetesData",
           type: "delete",
@@ -66,13 +80,14 @@ $("#testDiabetesbtn").click(()=>{
             console.log(d)
             console.log("Last test data is successfully deleted:(");
             alert("Test data has been deleted..Please retest!!");
+            $("body").addClass("modal-open")
           },
           error: function (request, status, error) {
             alert(request.responseJSON.Message);
           },
         });
       })
-      $('.modal').modal('hide');
+      $('.loader').modal('hide');
     },
     error: function (request, status, error) {
       alert(request.responseJSON.Message);
@@ -111,14 +126,16 @@ $("#testHeartbtn").click(()=>{
     type: "post",
     data: {data:window.ethereum.selectedAddress},
     beforeSend:function(){
-      $('.modal').modal('show');
+      $('.loader').modal('show');
     },
     success: function (d) {
       console.log("The data obtained after saving into mongoDB \n1.MongoDB ID of latest test data ►► " + d.id + "\n2.Hash of whole latest test data object ►► " + d.hash);
       console.log("→If the user rejects the Transaction...The latest inserted test data in the MongoDB has to be deleted!!");
       console.log("→If the user confirms the Transaction...the Id and Hash will be stored into blockchain!!");
-      App.addHeartData(d.id,d.hash).catch(function(){
-        console.log("The user has rejected the transaction!Iniating delete of last test data from MongoDB!!");
+      App.addHeartData(d.id,d.hash).then(()=>{
+        $("body").addClass("modal-open")
+      }).catch(function(){
+        console.log("The user has rejected the transaction!Initiating delete of last test data from MongoDB!!");
         $.ajax({
           url: window.location.pathname+"/deteleLastHeartData",
           type: "delete",
@@ -134,7 +151,7 @@ $("#testHeartbtn").click(()=>{
           },
         });
       })
-      $('.modal').modal('hide');
+      $('.loader').modal('hide');
     },
     error: function (request, status, error) {
       alert(request.responseJSON.Message);
