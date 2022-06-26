@@ -54,7 +54,6 @@ export const App = {
     App.health = await App.contracts.MajorProject.deployed()
     console.log("The contract is loaded ▼▼▼ ");
     console.log(App.health);
-    console.log("\n\n")
   },
 
   addDiabetesData: async (record_id,record_hash) => {
@@ -66,6 +65,7 @@ export const App = {
   getDiabetesData: async () => {
     console.log(window.ethereum.selectedAddress);
     var result= await App.health.getDiabetesData(window.ethereum.selectedAddress);
+    console.log("The blockchain content for Diabetes data ▼▼▼");
     console.log(result);
     return (result);
   },
@@ -77,21 +77,23 @@ export const App = {
   },
 
   getHeartData: async () => {
+    console.log(window.ethereum.selectedAddress);
     var result= await App.health.getHeartData(window.ethereum.selectedAddress);
+    console.log("The blockchain content for Heart data ▼▼▼");
     console.log(result);
     return (result);
   },
 
   getPatientDiabetesDataForDoctor: async (publicAddress) => {
-    console.log(publicAddress);
     var result= await App.health.getDiabetesData(publicAddress);
+    console.log("The blockchain content for Diabetes data ▼▼▼");
     console.log(result);
     return (result);
   },
 
   getPatientHeartDataForDoctor: async (publicAddress) => {
-    console.log(publicAddress);
     var result= await App.health.getHeartData(publicAddress);
+    console.log("The blockchain content for Heart data ▼▼▼");
     console.log(result);
     return (result);
   }

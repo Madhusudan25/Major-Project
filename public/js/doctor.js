@@ -21,8 +21,7 @@ function verifyAccount() {
     type: "post",
     data: { address: window.ethereum.selectedAddress },
     success: function (d) {
-      // console.log("Success");
-      console.log(d.doctorData.length);
+      console.log("Number of patients under you ►►► " + d.doctorData.length);
       $("#accessMsg").hide();
       $("#content").attr("hidden",false);
       displayContent(d.doctorData);
@@ -46,10 +45,10 @@ function displayContent(patients){
   $("#patientContent").show();
   $("#noPatientMsg").text("");
   if(patients.length>0){
+    console.log("Allow sharing ▼▼▼")
     patients.forEach((patient,i) => {
-      console.log(patient.allowSharing);
+      console.log("Patient "+ (i+1) + " ►►►" + patient.allowSharing);
       disableButton= patient.allowSharing?"":"disabled";
-      console.log(disableButton);
       $("#patientContent").append(`
         <tr>
           <td>${i+1}</td>
@@ -66,8 +65,6 @@ function displayContent(patients){
 $("body").on ("click", ".viewTestResults", function(e){
   var patientPublicAddress=e.target.name;
   App.getPatientDiabetesDataForDoctor(patientPublicAddress).then(function(result){
-    console.log("Blockchain Content : ");
-    console.log(result);
     if(result.length===0){
       $("#diabetesContentTable").empty();
       $("#diabetesContentTable").append(`

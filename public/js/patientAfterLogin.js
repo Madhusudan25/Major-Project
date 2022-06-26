@@ -96,7 +96,7 @@ $("#testDiabetesbtn").click(()=>{
 })
 
 $("#showDiabetesDatabtn").click(()=>{
-  console.log("The content in the blockchain for this public address is >> " );
+  console.log("Your public address ▼▼ " );
   App.getDiabetesData().then(function(result){
     if(result.length===0){
       alert("You dont have records!!")
@@ -160,7 +160,7 @@ $("#testHeartbtn").click(()=>{
 })
 
 $("#showHeartDatabtn").click(()=>{
-  console.log("The content in the blockchain for this public address is ►► " );
+  console.log("Your public address is ▼▼ " );
   App.getHeartData().then(function(result){
     if(result.length===0){
       alert("You dont have records!!")

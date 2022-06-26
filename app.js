@@ -411,24 +411,34 @@ app.post("/patient/:id/compareBCandMongoHeartData",(req,res)=>{
 app.post("/doctor/compareBCandMongoDiabetesData/doctorDisplay",(req,res)=>{
   const bcResult=req.body.result;
   Patient.findOne({patientPublicAddress:req.body.patientPublicAddress},(err,found)=>{
-    found.testDiabetesData.forEach(function(data,i) {
-      if(data._id.toString()!==bcResult[i][0] || md5(data)!==bcResult[i][1]){
-        res.status(400).json({"msg":"Data integrity compromised!!"})
-      }
-    });
-    res.status(200).json({data:found.testDiabetesData})
+    if(found.allowSharing){
+      found.testDiabetesData.forEach(function(data,i) {
+        if(data._id.toString()!==bcResult[i][0] || md5(data)!==bcResult[i][1]){
+          res.status(400).json({"msg":"Data integrity compromised!!"})
+        }
+      });
+      res.status(200).json({data:found.testDiabetesData})
+    }
+    else{
+      res.status(400).json({"msg":"You have no access to this Patient's Diabetes data"});
+    }
   })
 })
 
 app.post("/doctor/compareBCandMongoHeartData/doctorDisplay",(req,res)=>{
   const bcResult=req.body.result;
   Patient.findOne({patientPublicAddress:req.body.patientPublicAddress},(err,found)=>{
-    found.testHeartData.forEach(function(data,i) {
-      if(data._id.toString()!==bcResult[i][0] || md5(data)!==bcResult[i][1]){
-        res.status(400).json({"msg":"Data integrity compromised!!"})
-      }
-    });
-    res.status(200).json({data:found.testHeartData})
+    if(found.allowSharing){
+      found.testHeartData.forEach(function(data,i) {
+        if(data._id.toString()!==bcResult[i][0] || md5(data)!==bcResult[i][1]){
+          res.status(400).json({"msg":"Data integrity compromised!!"})
+        }
+      });
+      res.status(200).json({data:found.testHeartData})
+    }
+    else{
+      res.status(400).json({"msg":"You have no access to this Patient's Heart data"});
+    }
   })
 })
 
@@ -458,6 +468,7 @@ app.post("/doctor/viewPatientRecords",(req,res)=>{
     else{
       if(foundPatient){
         allowSharing=foundPatient.allowSharing;
+        console.log(allowSharing)
         if(allowSharing){
           res.status(200).json({patientDiabetesDetails:foundPatient});
         }
