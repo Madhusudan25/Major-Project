@@ -1,0 +1,27 @@
+<%- include('partials/header') %>
+  <body>
+    <%- include('partials/navbar') %>
+      <div style="width: 30%; margin: 30px auto;position: relative;">
+          <div class="mb-3">
+              <label for="username" class="form-label">Username</label>
+              <input class="form-control" type="email" name="username" id="username" placeholder="example@gmail.com">
+          </div>
+          <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <input class="form-control" type="password" name="password" id="password" placeholder="Password">
+          </div>
+      
+          <button id="login" class="btn btn-outline-success">Login</button>
+        </form>
+      <br>
+      <a href="/technician" id="registerAccess">Dont have an account? Register now!</a>
+      </div>
+  </body>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script
+    type="text/javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.2.7-rc.0/web3.min.js"
+  ></script>
+  <script src="/js/technicianLogin.js"></script>
+</html>

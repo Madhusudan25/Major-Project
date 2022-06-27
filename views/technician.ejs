@@ -1,0 +1,33 @@
+<%- include('partials/header') %>
+<style>
+  .input-group-text{
+    margin: auto 0 auto 5px;
+}
+
+.input-group-prepend{
+    display: flex;
+}
+
+</style>
+  <body>
+    <%- include('partials/navbar') %>
+    <div hidden id="username"><%- username %></div>
+    <div hidden id="userdata" data-test-value='<%- JSON.stringify(data) %>'></div>
+    <div hidden id="diabetesTestedArray" data-test-value="<%- isTestedDiabetes %>"></div>
+    <div hidden id="heartTestedArray" data-test-value="<%- isTestedHeart %>"></div>
+
+    <div style="height: 80%;margin-top :80px;">
+      <div class="accordion accordion-flush" id="accordionFlushExample">
+
+      </div>
+    </div>
+    
+    
+  </body>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script
+    type="text/javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.2.7-rc.0/web3.min.js"
+  ></script>
+  <script src="/js/technician.js" type="module"></script>
+</html>

@@ -6,3 +6,10 @@
     display: flex;
 }
 
+.clock{
+    height: 16px;
+}
+
+.testBtn{
+    border-radius: 22px;
+}

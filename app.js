@@ -7,6 +7,7 @@ const models = require("./models/model.js");
 const md5 = require("md5");
 
 const {spawn} =require('child_process');
+const { callbackify } = require("util");
 
 app.use(express.static(__dirname + "/public"));
 app.use(express.static(__dirname + "/build/contracts"));
@@ -24,6 +25,7 @@ const Hospital = models.Hospital;
 const Patient = models.Patient;
 const PatientDiabetesData = models.PatientDiabetesData;
 const PatientHeartData = models.PatientHeartData;
+const Technician= models.Technician;
 
 app.get("/", (req, res) => {
   res.render("home");
@@ -37,6 +39,10 @@ app.get("/doctor", (req, res) => {
   res.render("doctor");
 });
 
+app.get("/technician/register",(req,res)=>{
+  res.render("technicianRegister");
+})
+
 app.get("/patient",(req,res)=>{
   Hospital.find({},(err,foundHospitals)=>{
     if(!err){
@@ -49,6 +55,10 @@ app.get("/patient",(req,res)=>{
 
 app.get("/patient/login",(req,res)=>{
   res.render("patientLogin");
+})
+
+app.get("/technician/login",(req,res)=>{
+  res.render("technicianLogin")
 })
 
 app.get("/error", (req, res) => {
@@ -181,8 +191,86 @@ app.post("/patient/login", (req, res)=> {
   })
 });
 
-// Handling Machine learning 
+app.post("/technician/register",(req,res)=>{
+  var technicianName=req.body.username;
+  var technicianPasswd=req.body.password;
+  Technician.findOne({techName:technicianName},(err,foundTech)=>{
+    if(!err){
+      if(foundTech){
+        res.status(404).json({"msg":"User name alreasy exists!Please login"})
+      }
+      else{
+        const newTech= new Technician({
+          techName:technicianName,
+          techPassword:technicianPasswd
+        })
 
+        newTech.save(function (error, result) {
+          if (!error) {
+            res.status(200).json({"data":result._id})
+          }
+        });
+      }
+    }
+  })
+})
+
+app.post("/technician/login",(req,res)=>{
+  var technicianName=req.body.username;
+  var technicianPasswd=req.body.password;
+  Technician.findOne({techName:technicianName},(err,foundTech)=>{
+    if(!err){
+      if(!foundTech){
+        res.status(404).json({"msg":"Username doesnot exist!"})
+      }
+      else{
+        if(foundTech.techPassword===technicianPasswd){
+          res.status(200).json({"data":foundTech._id})
+        }
+        else{
+          res.status(400).json({"msg":"Password mismatch!Please retry!!"})
+        }
+      }
+    }
+  })
+})
+
+app.get("/technician/:id",(req,res)=>{
+  var id=req.params.id;
+  Technician.findOne({_id:id},(err,foundTech)=>{
+    if(!err){
+      if(foundTech){
+        var username=foundTech.techName.split("@")[0];
+        Patient.find({},{patientName: 1,patientPhoneNo:1,patientAge:1,patientSex:1,testDiabetesData:1,testHeartData:1},(err,foundPatient)=>{
+          var allTestedDiabetes=[];
+          var allTestedHeart=[];
+          foundPatient.forEach(data => {
+            if(data.testDiabetesData[data.testDiabetesData.length-1].testDiabetesResult!==null){
+              allTestedDiabetes.push(true);
+            }
+            else{
+              allTestedDiabetes.push(false);
+            }
+            if(data.testHeartData[data.testHeartData.length-1].testHeartResult!==null){
+              allTestedHeart.push(true);
+            }
+            else{
+              allTestedHeart.push(false);
+            }
+          });
+          res.render("technician",{username:username , data:foundPatient,isTestedDiabetes:allTestedDiabetes,isTestedHeart:allTestedHeart})
+        })
+      }
+      else{
+        res.redirect("/error");
+      }
+    }
+    else{
+      res.redirect("/error");
+    }
+  })
+})
+ 
 app.get("/patient/:id",(req,res)=>{
   var allowSharing=false;
   Patient.findOne({_id:req.params.id},(err,foundPatient)=>{
@@ -191,93 +279,87 @@ app.get("/patient/:id",(req,res)=>{
     }
     else{
       if(foundPatient){
-        patientAge=foundPatient.patientAge;
-        patientSex=foundPatient.patientSex;
         allowSharing=foundPatient.allowSharing;
-        res.render("patientAfterLogin",{sharingState:allowSharing,patientAge:patientAge,patientSex:patientSex})
+        res.render("patientAfterLogin",{sharingState:allowSharing,patientData:foundPatient.patientName,diabetesData:foundPatient.testDiabetesData,heartData:foundPatient.testHeartData})
       }
     }
   })
 })
 
-app.post("/patient/:id/diabtetesTest",async (req,res)=>{
+app.post("/patient/:id/diabetesTest",async (req,res)=>{
   var id=req.params.id;
+  var mongoId=req.body.mongoId;
   console.log("Mongo Patient Id is >>> " + id);
   console.log("Public address of patient received is >>> "+ req.body.data)
+  var data;
 
-  var age=generateRandomNumber();
-  var pregnancies=generateRandomNumber(0,17);
-  var glucose=generateRandomNumber(0,199);
-  var bloodPressure=generateRandomNumber(0,122);
-  var skinThickness=generateRandomNumber(0,99);
-  var insulin=generateRandomNumber(0,846);
-  var BMI=generateRandomNumber(0,68);
-  var pedigreeFunction=parseFloat(generateRandomNumber(0,3));
-  var diabetesResult=-999;
-  
-  const  diabetes_model= spawn('python',['Python_files/diabetes_prediction.py',[pregnancies,glucose,bloodPressure,skinThickness,insulin,BMI,pedigreeFunction,age]]);
+  let dataRequired={
+    "age":-999,
+    "pregnancies":-999,
+    "glucose":-999,
+    "bloodPressure":-999,
+    "skinThickness":-999,
+    "insulin":-999,
+    "BMI":-999,
+    "pedigreeFunction":-999,
+    "time":""
+  }
 
-  diabetes_model.stdout.on('data',(data)=>{
-      // Cannot use console.log(data)-->It gives buffer value;
-      console.log(`The result obtained from ML model for diabetes test is >>> ${data}`);
-      diabetesResult=Math.round(parseFloat(data))
-      Patient.findOne({_id:id},(err,foundPatient)=>{
-        if(!err){
-          if(!foundPatient){
-            res.status(404).json({"message":"Patient is not found"});
-          }
-          else
-          {
-            let time= getCurrentDateTime();
-            const data=new PatientDiabetesData({
-              testTimings : time,
-              testAge : age,
-              testPregnancies : pregnancies,
-              testGlucose : glucose,
-              testBloodPressure : bloodPressure,
-              testSkinThickness : skinThickness,
-              testInsulin : insulin,
-              testBMI : BMI,
-              testPedigreeFunction : pedigreeFunction,
-              testDiabetesResult : diabetesResult
-            })
-            foundPatient.testDiabetesData.push(data);
-            foundPatient.save((error,savedPatient)=>{
-              // console.log(savedPatient);
-              if(!error){
-                if(savedPatient)
-                {var dataTestedArray=savedPatient.testDiabetesData;
-                  var lastTestedData=dataTestedArray[dataTestedArray.length-1];
-                  var lastTestedDataMongoId=lastTestedData._id;
-        
-                  var lastTestedDataHash=md5(lastTestedData);
-        
-                  // console.log(lastTestedData);
-
-                  console.log("The MongoDB Id of the last tested data  >>>> " + lastTestedDataMongoId);
-                  console.log("The hash of the last tested data object >>>> " + lastTestedDataHash);
-
-                  res.status(200).json({"id":lastTestedDataMongoId,"hash":lastTestedDataHash});}
-              }
-              else{
-                res.status(404).json({"msg":"Could not save patientinfo"});
-              }
-            });
-          }
-          
-        }
-      })
-
-      // res.send("The predicted output of diabetes prediction is: "+ Math.round(parseFloat(data)))
+  Patient.findOne({_id:id}, async (err,foundPatient)=>{
+    data = foundPatient.testDiabetesData.filter(x=>x._id==mongoId)[0];
+    dataRequired.age= data.testAge;
+    dataRequired.pregnancies=data.testPregnancies;
+    dataRequired.glucose=data.testGlucose;
+    dataRequired.bloodPressure=data.testBloodPressure;
+    dataRequired.skinThickness=data.testSkinThickness;
+    dataRequired.insulin=data.testInsulin;
+    dataRequired.BMI=data.testBMI;
+    dataRequired.pedigreeFunction=data.testPedigreeFunction;
+    dataRequired.time= getCurrentDateTime();
+    await callDiabetesMLModel(dataRequired,id,mongoId,res);
   })
-
-  diabetes_model.stderr.on('data',(data)=>{
-      console.log("Error is :",`${data}`);
-  })
-
-  
 })
 
+function callDiabetesMLModel(dataRequired,patientId,mongoId,res){
+  const  diabetes_model= spawn('python',['Python_files/diabetes_prediction.py',[dataRequired.pregnancies,dataRequired.glucose,dataRequired.bloodPressure,dataRequired.skinThickness,dataRequired.insulin,dataRequired.BMI,dataRequired.pedigreeFunction,dataRequired.age]]);
+  diabetes_model.stdout.on('data',(data)=>{
+    console.log(`The result obtained from ML model for diabetes test is >>> ${data}`);
+    diabetesResult=Math.round(parseFloat(data))
+    Patient.update({'testDiabetesData._id': mongoId},
+    {'$set': {
+      'testDiabetesData.$.testTimings':dataRequired.time,
+      'testDiabetesData.$.testDiabetesResult': diabetesResult
+    }},
+    function(err,model) {
+      if(!err){
+          console.log(model);
+          Patient.findOne({_id:patientId},(err,foundPatient)=>{
+            var dataTestedArray=foundPatient.testDiabetesData;
+            var lastTestedData=dataTestedArray[dataTestedArray.length-1];
+            var lastTestedDataMongoId=lastTestedData._id;
+
+            var lastTestedDataHash=md5(lastTestedData);
+
+            console.log("The MongoDB Id of the last tested data  >>>> " + lastTestedDataMongoId);
+            console.log("The hash of the last tested data object >>>> " + lastTestedDataHash);
+
+            res.status(200).json({"id":lastTestedDataMongoId,"hash":lastTestedDataHash});
+          })
+      }
+    });
+  })
+  
+}
+
+// var age=generateRandomNumber();
+  // var pregnancies=generateRandomNumber(0,17);
+  // var glucose=generateRandomNumber(0,199);
+  // var bloodPressure=generateRandomNumber(0,122);
+  // var skinThickness=generateRandomNumber(0,99);
+  // var insulin=generateRandomNumber(0,846);
+  // var BMI=generateRandomNumber(0,68);
+  // var pedigreeFunction=parseFloat(generateRandomNumber(0,3));
+  // var diabetesResult=-999;
 
 function generateRandomNumber(low=0,high=100){
   return parseFloat(Math.floor(low + (Math.random() * high) + 1));
@@ -359,18 +441,28 @@ app.post("/patient/:id/heartDiseaseTest",async (req,res)=>{
           }
         })
     })
-
-  
 })
 
 app.delete("/patient/:id/deteleLastDiabetesData",(req,res)=>{
   const id=req.params.id;
+  const mongoId=req.body.mongoId;
   // console.log(req.body.data);
-  Patient.findOne({_id:id},(err,foundPatient)=>{
-    var deletedData=foundPatient.testDiabetesData.pop();
-    foundPatient.save();
-    res.status(200).json({data:deletedData})
+  // Patient.findOne({_id:id},(err,foundPatient)=>{
+  //   var deletedData=foundPatient.testDiabetesData.pop();
+  //   foundPatient.save();
+  //   res.status(200).json({data:deletedData})
+  // })
+  Patient.update({'_id':id,'testDiabetesData._id': mongoId},
+  {'$set': {
+    'testDiabetesData.$.testTimings':"",
+    'testDiabetesData.$.testDiabetesResult': null
+  }},
+  function(err,model) {
+    if(!err){
+      res.status(200).json({"data":"/patient/"+id})
+    }
   })
+
 })
 
 app.delete("/patient/:id/deteleLastHeartData",(req,res)=>{
@@ -480,25 +572,65 @@ app.post("/doctor/viewPatientRecords",(req,res)=>{
   })
 })
 
+app.post("/technician/diabetes",(req,res)=>{
+  var patientId=req.body.patientId;
+  var data=req.body.diabetesData;
+
+  Patient.findOne({_id:patientId},(err,foundPatient)=>{
+    if(!err){
+      if(foundPatient){
+        const diabetesData=new PatientDiabetesData(data);
+        foundPatient.testDiabetesData.push(diabetesData);
+        foundPatient.save((error,saved)=>{
+          if(!error){
+            res.status(200).json({"data":"Data saved successfully"})
+          }
+        })
+      }
+      else{
+        res.status(500).json({"msg":"Something went wrong!!!"})
+      }
+    }else{
+      res.status(500).json({"msg":"Something went wrong!!!"})
+    }
+  })
+})
+
+app.post("/technician/heart",(req,res)=>{
+  var patientId=req.body.patientId;
+  var data=req.body.heartData;
+
+  console.log(data);
+  Patient.findOne({_id:patientId},(err,foundPatient)=>{
+    if(!err){
+      if(foundPatient){
+        const heartData=new PatientHeartData(data);
+        foundPatient.testHeartData.push(heartData);
+        foundPatient.save((error,saved)=>{
+          if(!error){
+            res.status(200).json({"data":"Data saved successfully"})
+          }
+        })
+      }
+      else{
+        res.status(500).json({"msg":"Something went wrong!!!"})
+      }
+    }else{
+      res.status(500).json({"msg":"Something went wrong!!!"})
+    }
+  })
+})
+
 function getCurrentDateTime(){
   let date_ob = new Date();
-
   let date = ("0" + date_ob.getDate()).slice(-2);
-
   let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
-
   let year = date_ob.getFullYear();
-
-  // current hours
   let hours = ("0" + date_ob.getHours()).slice(-2);
-
-  // current minutes
   let minutes =  ("0" + date_ob.getMinutes()).slice(-2);
-
-  // prints date & time in DD-MM-YYYY HH:MM format
   return (date + "-" + month + "-" + year + " " + hours + ":" + minutes);
-
 }
+
 app.listen(3000, (req, res) => {
   console.log("Server is started at port 3000");
 });

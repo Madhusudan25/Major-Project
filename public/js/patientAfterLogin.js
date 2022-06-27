@@ -42,8 +42,13 @@ $(function () {
 
 $( document ).ready(function() {
   App.load();
-  console.log( "ready!" );
   App.loadContract();
+  $(".testDiabetesBtn").on('click', function(event){
+    testDiabetes(event);
+  });
+  $(".testHeartBtn").on('click', function(event){
+    testHeart(event);
+  });
 });
 
 $("#enterDiabetesData").click(()=>{
@@ -54,12 +59,13 @@ $("#enterHeartData").click(()=>{
   $(".heartClear").val("");
 })
 
-$("#testDiabetesbtn").click(()=>{
+function testDiabetes(e){
+  var mongoId=e.target.value;
   console.log("Initating testing..Please wait!!!");
   $.ajax({
-    url: window.location.pathname+"/diabtetesTest",
+    url: window.location.pathname+"/diabetesTest",
     type: "post",
-    data: {data:window.ethereum.selectedAddress},
+    data: {data:window.ethereum.selectedAddress, mongoId:mongoId},
     beforeSend:function(){
       $('.loader').modal('show');
     },
@@ -68,19 +74,19 @@ $("#testDiabetesbtn").click(()=>{
       console.log("→If the user rejects the Transaction...The latest inserted test data in the MongoDB has to be deleted!!");
       console.log("→If the user confirms the Transaction...the Id and Hash will be stored into blockchain!!");
       App.addDiabetesData(d.id,d.hash).then(()=>{
-        $("body").addClass("modal-open")
+        window.location.reload();
       }).catch(function(){
         console.log("The user has rejected the transaction!Initiating delete of last test data from MongoDB!!");
         $.ajax({
           url: window.location.pathname+"/deteleLastDiabetesData",
           type: "delete",
-          data: {data:d.id},
+          data: {data:d.id,mongoId:mongoId},
           success: function (d) {
-            console.log("The deleted data from mongoDB (Last tested and cancelled transaction) ▼▼▼ ");
-            console.log(d)
-            console.log("Last test data is successfully deleted:(");
-            alert("Test data has been deleted..Please retest!!");
-            $("body").addClass("modal-open")
+            // console.log("The deleted data from mongoDB (Last tested and cancelled transaction) ▼▼▼ ");
+            // console.log(d)
+            // console.log("Last test data is successfully deleted:(");
+            // alert("Test data has been deleted..Please retest!!");
+            window.location.href=d.data;
           },
           error: function (request, status, error) {
             alert(request.responseJSON.Message);
@@ -93,7 +99,7 @@ $("#testDiabetesbtn").click(()=>{
       alert(request.responseJSON.Message);
     },
   });
-})
+}
 
 $("#showDiabetesDatabtn").click(()=>{
   console.log("Your public address ▼▼ " );
@@ -119,7 +125,7 @@ $("#showDiabetesDatabtn").click(()=>{
   });
 })
 
-$("#testHeartbtn").click(()=>{
+function testHeart(e){
   console.log("Initating testing..Please wait!!!");
   $.ajax({
     url: window.location.pathname+"/heartDiseaseTest",
@@ -157,7 +163,7 @@ $("#testHeartbtn").click(()=>{
       alert(request.responseJSON.Message);
     },
   });
-})
+}
 
 $("#showHeartDatabtn").click(()=>{
   console.log("Your public address is ▼▼ " );

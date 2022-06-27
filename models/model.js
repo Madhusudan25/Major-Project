@@ -57,18 +57,25 @@ const hospitalSchema = new mongoose.Schema({
   doctorsList: [doctorSchema],
 });
 
+const technicianSchema = new mongoose.Schema({
+  techName: String,
+  techPassword: String
+});
+
 const DoctorModel = new mongoose.model("Doctor", doctorSchema);
 const HospitalModel = new mongoose.model("Hospital", hospitalSchema);
 const PatientModel = new mongoose.model("Patient", patientSchema);
 const PatientDiabetesDataModel = new mongoose.model("PatientTest",patientDiabetesDataSchema);
 const PatientHeartDataModel = new mongoose.model("PatientHeartTestModel",patientHeartDiseaseSchema);
+const TechnicianModel= new mongoose.model("TechnicianDataModel",technicianSchema);
 
 module.exports = {
   Hospital: HospitalModel,
   Doctor: DoctorModel,
   Patient: PatientModel,
   PatientDiabetesData : PatientDiabetesDataModel,
-  PatientHeartData:PatientHeartDataModel
+  PatientHeartData:PatientHeartDataModel,
+  Technician:TechnicianModel
 };
 
 // db.hospitals.insert({hospitalName:"Hospital one",hospitalPublicAddress:"0xfa22002a52d93259011311080df654c221092eed",doctorsList:[]})
