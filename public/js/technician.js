@@ -6,6 +6,7 @@ $(window).load(()=>{
         </div>`); 
         
     var userData=JSON.parse($("#userdata").attr('data-test-value'));
+    console.log(userData);
     var isTestedDiabetesString=$("#diabetesTestedArray").attr('data-test-value');
     var isTestedDiabetes=isTestedDiabetesString.split(",")
     var isTestedHeartString=$("#heartTestedArray").attr('data-test-value');
@@ -13,6 +14,10 @@ $(window).load(()=>{
 
     var disabledDiabetes="";
     var disabledHeart="";
+    
+    if(userData.length===0){
+      $("#noPatientMsg").attr("hidden",false)
+    }
     userData.forEach((data,i) => {
       disabledDiabetes = isTestedDiabetes[i]==="true"?"":"disabled";
       disabledHeart=isTestedHeart[i]==="true"?"":"disabled";
@@ -43,49 +48,49 @@ $(window).load(()=>{
               <div class="input-group mb-2 mr-sm-2">
                 <input class="form-control rounded diabetesClear" type="number" name="testPregnancies" id="testPregnancies-${data._id}" placeholder="Pregnancies">
                 <div class="input-group-prepend">
-                    <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Age"><i class="fa-solid fa-info"></i></div>
+                    <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Pregnancies"><i class="fa-solid fa-info"></i></div>
                   </div>
               </div>
               <label for="testGlucose-${data._id}" class="form-label">Glucose</label>
               <div class="input-group mb-2 mr-sm-2">
                 <input class="form-control rounded diabetesClear" type="number" name="testGlucose" id="testGlucose-${data._id}" placeholder="Glucose">
                 <div class="input-group-prepend">
-                    <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Age"><i class="fa-solid fa-info"></i></div>
+                    <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Glucose"><i class="fa-solid fa-info"></i></div>
                   </div>
               </div>
               <label for="testBloodPressure-${data._id}" class="form-label">Blood Pressure</label>
               <div class="input-group mb-2 mr-sm-2">
                 <input class="form-control rounded diabetesClear" type="number" name="testBloodPressure" id="testBloodPressure-${data._id}" placeholder="Blood Pressure">
                 <div class="input-group-prepend">
-                    <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Age"><i class="fa-solid fa-info"></i></div>
+                    <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Blood Pressure"><i class="fa-solid fa-info"></i></div>
                   </div>
               </div>
               <label for="testSkinThickness-${data._id}" class="form-label">Skin Thickness</label>
               <div class="input-group mb-2 mr-sm-2">
                 <input class="form-control rounded diabetesClear" type="number" name="testSkinThickness" id="testSkinThickness-${data._id}" placeholder="Skin Thickness" >
                 <div class="input-group-prepend">
-                    <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Age"><i class="fa-solid fa-info"></i></div>
+                    <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Skin Thickness"><i class="fa-solid fa-info"></i></div>
                   </div>
               </div>
               <label for="testInsulin-${data._id}" class="form-label">Insulin</label>
               <div class="input-group mb-2 mr-sm-2">
                 <input class="form-control rounded diabetesClear" type="number" name="testInsulin" id="testInsulin-${data._id}" placeholder="Insulin" >
                 <div class="input-group-prepend">
-                    <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Age"><i class="fa-solid fa-info"></i></div>
+                    <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Insulin"><i class="fa-solid fa-info"></i></div>
                   </div>
               </div>
               <label for="testBMI-${data._id}" class="form-label">BMI</label>
               <div class="input-group mb-3">
                 <input class="form-control rounded diabetesClear" type="number" name="testBMI" id="testBMI-${data._id}" placeholder="testBMI" >
                 <div class="input-group-prepend">
-                    <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Age"><i class="fa-solid fa-info"></i></div>
+                    <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="testBMI"><i class="fa-solid fa-info"></i></div>
                   </div>
               </div>
               <label for="testPedigreeFunction-${data._id}" class="form-label">Pedigree Function</label>
               <div class="input-group mb-2 mr-sm-2">
                 <input class="form-control rounded diabetesClear" type="number" name="testPedigreeFunction" id="testPedigreeFunction-${data._id}" placeholder="Pedigree Function" >
                 <div class="input-group-prepend">
-                    <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Age"><i class="fa-solid fa-info"></i></div>
+                    <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Pedigree Function"><i class="fa-solid fa-info"></i></div>
                   </div>
               </div>
               <div style="text-align:center;margin-top:30px">
@@ -107,121 +112,91 @@ $(window).load(()=>{
               <div class="input-group mb-2 mr-sm-2">
                 <input class="form-control rounded" type="text" name="sex" id="sex-${data._id}" placeholder="Sex" value=${data.patientSex} disabled>
                 <div class="input-group-prepend">
-                    <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Age"><i class="fa-solid fa-info"></i></div>
+                    <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Sex"><i class="fa-solid fa-info"></i></div>
                   </div>
               </div>
               <label for="cp-${data._id}" class="form-label">Chest Pain Type</label>
+              
               <div class="input-group mb-2 mr-sm-2">    
-                <select id="cp-${data._id}" class="form-control rounded heartClear">
-                  <option value="" disabled selected>Choose...</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                </select>
+                <input class="form-control rounded heartClear" type="text" name="cp" id="cp-${data._id}" placeholder="Chest Pain">
     
                 <div class="input-group-prepend">
-                    <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Age"><i class="fa-solid fa-info"></i></div>
+                    <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Chest Pain Type"><i class="fa-solid fa-info"></i></div>
                   </div>
               </div>
               <label for="trestbps-${data._id}" class="form-label">Resting BP</label>
               <div class="input-group mb-2 mr-sm-2">
                 <input class="form-control rounded heartClear" type="number" name="trestbps" id="trestbps-${data._id}" placeholder="Resting Blood Pressure">
                 <div class="input-group-prepend">
-                    <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Age"><i class="fa-solid fa-info"></i></div>
+                    <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Resting Blood Pressure"><i class="fa-solid fa-info"></i></div>
                   </div>
               </div>
               <label for="chol-${data._id}" class="form-label">Cholesterol</label>
               <div class="input-group mb-2 mr-sm-2">
                 <input class="form-control rounded heartClear" type="number" name="chol" id="chol-${data._id}" placeholder="Cholesterol" >
                 <div class="input-group-prepend">
-                    <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Age"><i class="fa-solid fa-info"></i></div>
+                    <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Cholesterol"><i class="fa-solid fa-info"></i></div>
                   </div>
               </div>
               <label for="fbs-${data._id}" class="form-label">Fasting Blood Sugar</label>
               <div class="input-group mb-2 mr-sm-2">
-                <select id="fbs-${data._id}" class="form-control rounded heartClear">
-                  <option value="" disabled selected>Choose...</option>
-                  <option value="0">0</option>
-                  <option value="1">1</option>
-                </select>
+                <input class="form-control rounded heartClear" type="number" name="fbs" id="fbs-${data._id}" placeholder="Fasting Blood Sugar">
+
                 <div class="input-group-prepend">
-                    <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Age"><i class="fa-solid fa-info"></i></div>
+                    <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Fasting Blood Sugar"><i class="fa-solid fa-info"></i></div>
                   </div>
               </div>
               <label for="restecg-${data._id}" class="form-label">Resting Electrocardiographic</label>
               <div class="input-group mb-2 mr-sm-2">
-                <select id="restecg-${data._id}" class="form-control rounded heartClear">
-                  <option value="" disabled selected>Choose...</option>
-                  <option value="0">0</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                </select>
+                <input class="form-control rounded heartClear" type="number" name="restecg" id="restecg-${data._id}" placeholder="Resting Electrocardiographic">
                 
                 <div class="input-group-prepend">
-                    <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Age"><i class="fa-solid fa-info"></i></div>
+                    <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Resting Electrocardiographic"><i class="fa-solid fa-info"></i></div>
                   </div>
               </div>
               <label for="thalach-${data._id}" class="form-label">Maximum Heart Rate Achieved (Thalach)</label>
               <div class="input-group mb-2 mr-sm-2">
                 <input class="form-control rounded heartClear" type="number" name="thalach" id="thalach-${data._id}" placeholder="Thalach value" >
                 <div class="input-group-prepend">
-                    <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Age"><i class="fa-solid fa-info"></i></div>
+                    <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Thalach value"><i class="fa-solid fa-info"></i></div>
                   </div>
               </div>
               <label for="exang-${data._id}" class="form-label">Exercise Induced Angina (Exang)</label>
               <div class="input-group mb-2 mr-sm-2">
-                <select id="exang-${data._id}" class="form-control rounded heartClear">
-                  <option value="" disabled selected>Choose...</option>
-                  <option value="0">0</option>
-                  <option value="1">1</option>
-                </select>
+              <input class="form-control rounded heartClear" type="number" name="exang" id="exang-${data._id}" placeholder="Exercise Induced Angina" >
                 <div class="input-group-prepend">
-                    <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Age"><i class="fa-solid fa-info"></i></div>
+                    <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Exang"><i class="fa-solid fa-info"></i></div>
                   </div>
               </div>
               <label for="oldpeak-${data._id}" class="form-label">ST depression (Oldpeak)</label>
               <div class="input-group mb-2 mr-sm-2">
                 <input class="form-control rounded heartClear" type="number" name="oldpeak" id="oldpeak-${data._id}" placeholder="Oldpeak" >
                 <div class="input-group-prepend">
-                    <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Age"><i class="fa-solid fa-info"></i></div>
+                    <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Oldpeak"><i class="fa-solid fa-info"></i></div>
                   </div>
               </div>
               <label for="slope-${data._id}" class="form-label">Slope of the peak exercise</label>
               <div class="input-group mb-2 mr-sm-2">
-                <select id="slope-${data._id}" class="form-control rounded heartClear">
-                  <option value="" disabled selected>Choose...</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                </select>
+                <input class="form-control rounded heartClear" type="number" name="slope" id="slope-${data._id}" placeholder="Slope" >
+
                 <div class="input-group-prepend">
-                    <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Age"><i class="fa-solid fa-info"></i></div>
+                    <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Slope of the peak exercise"><i class="fa-solid fa-info"></i></div>
                   </div>
               </div>
               <label for="ca-${data._id}" class="form-label">Number of major vessels (CA)</label>
               <div class="input-group mb-2 mr-sm-2">
-                <select id="ca-${data._id}" class="form-control rounded heartClear">
-                  <option value="" disabled selected>Choose...</option>
-                  <option value="0">0</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                </select>
+                <input class="form-control rounded heartClear" type="number" name="ca" id="ca-${data._id}" placeholder="Number of major vessels" >
+
                 <div class="input-group-prepend">
                     <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Coronary Artery"><i class="fa-solid fa-info"></i></div>
                   </div>
               </div>
               <label for="thal-${data._id}" class="form-label">Defect Value (Thal)</label>
               <div class="input-group mb-2 mr-sm-2">
-                    <select id="thal-${data._id}" class="form-control rounded heartClear">
-                  <option value="" disabled selected>Choose...</option>
-                  <option value="3">3</option>
-                  <option value="6">6</option>
-                  <option value="7">7</option>
-                </select>
+                <input class="form-control rounded heartClear" type="number" name="thal" id="thal-${data._id}" placeholder="Defect Value (Thal)" >
+
                 <div class="input-group-prepend">
-                    <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Age"><i class="fa-solid fa-info"></i></div>
+                    <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Thal"><i class="fa-solid fa-info"></i></div>
                 </div>
               </div>
               <div style="text-align:center;margin-top:30px">

@@ -38,7 +38,10 @@ function verifyAccount() {
 function displayContent(patients){
   if(patients.length===0){
     $("#patientContent").hide();
-    $("#noPatientMsg").append("There are no patients under you!!");
+    $("#noPatientMsg").append(
+    `<div class="alert alert-info" role="alert">
+      There are no patients under you!!
+    </div>`);
     return;
   }
   var disableButton="";
@@ -55,7 +58,7 @@ function displayContent(patients){
           <td>${patient.patientName}</td>
           <td>${patient.patientPhoneNo}</td>
           <td>${patient.patientAge}</td>
-          <td><button class="viewTestResults btn btn-outline-secondary" ${disableButton} name="${patient.patientPublicAddress}" value="${patient._id}">View</button></td>
+          <td><button class="viewTestResults btn btn-outline-success" ${disableButton} name="${patient.patientPublicAddress}" value="${patient._id}" style="padding:2px 8px">View</button></td>
         </tr>
       `)
     });
@@ -68,7 +71,9 @@ $("body").on ("click", ".viewTestResults", function(e){
     if(result.length===0){
       $("#diabetesContentTable").empty();
       $("#diabetesContentTable").append(`
-      <p>There are no testing done for diabetes</p>
+        <div class="alert alert-info" role="alert">
+          There is no testing done for diabetes!!
+         </div>
       `)
     }
     else{
@@ -90,7 +95,9 @@ $("body").on ("click", ".viewTestResults", function(e){
     if(result.length===0){
       $("#heartDataContentTable").empty();
       $("#heartDataContentTable").append(`
-      <p>There are no testing done for heart</p>
+      <div class="alert alert-info" role="alert">
+      There is no testing done for heart disease!!
+     </div>
   `)
     }
     else{
@@ -135,6 +142,13 @@ function fillDiabetesTestData(diabetesDetails) {
     </thead> 
   `)
   diabetesDetails.forEach((detail,i) => {
+    var result="";
+    if(detail.testDiabetesResult===0){
+      result='<button type="button" class="btn btn-success" style="background-color: #198754;">Negative</button>'
+    }
+    else{
+      result='<button type="button" class="btn btn-danger"  style="background-color: #bb2d3b;">Positive</button>'
+    }
     $("#diabetesContentTable").append(`
     <tr style="text-align:center;">
         <td>${i+1}</td>
@@ -146,13 +160,14 @@ function fillDiabetesTestData(diabetesDetails) {
         <td>${detail.testInsulin}</td>
         <td>${detail.testBMI}</td>
         <td>${detail.testPedigreeFunction}</td>
-        <td>${detail.testDiabetesResult}</td>
+        <td>${result}</td>
     </tr>
   `)
   });
 }
 
 function fillHeartTestData(heartDetails){
+  $("#heartDataContentTable").empty();
   $("#heartDataContentTable").append(`
   <thead class="thead-dark">  
       <tr>
@@ -179,6 +194,13 @@ function fillHeartTestData(heartDetails){
     </thead> 
   `)
   heartDetails.forEach((detail,i) => {
+    var result="";
+    if(detail.testHeartResult===0){
+      result='<button class="btn btn-success" style="background-color: #198754;">Negative</button>'
+    }
+    else{
+      result='<button class="btn btn-danger" style="background-color: #bb2d3b;">Positive</button>'
+    }
     $("#heartDataContentTable").append(`
     <tr style="text-align:center;">
         <td>${i+1}</td>
@@ -194,7 +216,7 @@ function fillHeartTestData(heartDetails){
         <td>${detail.slope}</td>
         <td>${detail.ca}</td>
         <td>${detail.thal}</td>
-        <td>${detail.testHeartResult}</td>
+        <td>${result}</td>
     </tr>
   `)
   });

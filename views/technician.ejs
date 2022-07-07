@@ -16,7 +16,11 @@
     <div hidden id="diabetesTestedArray" data-test-value="<%- isTestedDiabetes %>"></div>
     <div hidden id="heartTestedArray" data-test-value="<%- isTestedHeart %>"></div>
 
-    <div style="height: 80%;margin-top :80px;">
+    <div class="alert alert-info" id="noPatientMsg" hidden  role="alert" style="text-align:center">
+      There are no registered patients! 
+    </div>
+
+    <div style="height: 80%;width:75%;margin: 80px auto 0px;">
       <div class="accordion accordion-flush" id="accordionFlushExample">
 
       </div>

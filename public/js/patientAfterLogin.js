@@ -127,10 +127,11 @@ $("#showDiabetesDatabtn").click(()=>{
 
 function testHeart(e){
   console.log("Initating testing..Please wait!!!");
+  var mongoId=e.target.value;
   $.ajax({
     url: window.location.pathname+"/heartDiseaseTest",
     type: "post",
-    data: {data:window.ethereum.selectedAddress},
+    data: {data:window.ethereum.selectedAddress, mongoId:mongoId},
     beforeSend:function(){
       $('.loader').modal('show');
     },
@@ -139,18 +140,19 @@ function testHeart(e){
       console.log("→If the user rejects the Transaction...The latest inserted test data in the MongoDB has to be deleted!!");
       console.log("→If the user confirms the Transaction...the Id and Hash will be stored into blockchain!!");
       App.addHeartData(d.id,d.hash).then(()=>{
-        $("body").addClass("modal-open")
+        window.location.reload();
       }).catch(function(){
         console.log("The user has rejected the transaction!Initiating delete of last test data from MongoDB!!");
         $.ajax({
           url: window.location.pathname+"/deteleLastHeartData",
           type: "delete",
-          data: {data:d.id},
+          data: {data:d.id,mongoId:mongoId},
           success: function (d) {
-            console.log("The deleted data from mongoDB (Last tested and cancelled transaction) ▼▼▼");
-            console.log(d)
-            console.log("Last test data is successfully deleted:(");
-            alert("Test data has been deleted..Please retest!!");
+            // console.log("The deleted data from mongoDB (Last tested and cancelled transaction) ▼▼▼");
+            // console.log(d)
+            // console.log("Last test data is successfully deleted:(");
+            // alert("Test data has been deleted..Please retest!!");
+            window.location.href=d.data;
           },
           error: function (request, status, error) {
             alert(request.responseJSON.Message);
@@ -244,6 +246,11 @@ function fillDiabetesTestData(diabetesDetails) {
     </tr>
   `)
   });
+  $("#diabetesContentTable").append(`
+  <br>
+    <button class="btn btn-outline-primary" onclick="window.location.reload()"><i class="fa-solid fa-arrow-right-from-bracket" style="transform:rotate(180deg)"></i></button>
+  
+    `);
 }
 
 function fillHeartTestData(heartDetails){
@@ -270,7 +277,7 @@ function fillHeartTestData(heartDetails){
         <th>Slope</th>
         <th>Ca</th>
         <th>Thal</th>
-        <th>HeartDisease Test Result</th>
+        <th>Heart Disease Test Result</th>
       </tr>  
     </thead> 
   `)
@@ -294,4 +301,8 @@ function fillHeartTestData(heartDetails){
     </tr>
   `)
   });
+  $("#heartDataContentTable").append(`
+  <br>
+    <button class="btn btn-outline-primary" onclick="window.location.reload()"><i class="fa-solid fa-arrow-right-from-bracket" style="transform:rotate(180deg)"></i></button>
+    `);
 }

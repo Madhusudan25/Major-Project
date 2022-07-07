@@ -24,20 +24,66 @@
         <label for="exampleFormControlInput1" class="form-label">Password</label>
         <input class="form-control" type="password" name="password" id="password" placeholder="Password" >
       </div>
-      <button id="loginToMetamask" class="btn btn-outline-secondary">Login to metamask</button>
-      <div class="alert alert-light" id="metamaskAddress" role="alert">
-      </div>
-      
-      <p ></p>
-      <select id="hospitalDetails" class="form-select w-50" aria-label="Default select example" data-test-value='<%- JSON.stringify(hospitalInfo) %>' >
-        <option value="" disabled selected>Select hospital...</option>
-      </select>
 
-      <select id="doctorDetails" class="form-select w-50" hidden style="margin-top: 20px;"></select>
+      <div style="text-align: center;">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+          Test for symptoms
+        </button>
+      </div>
+
+      <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div style="text-align: center;">
+                <button class="btn btn-outline-success active" id="diabetesSymptoms">Diabetes</button>
+                <button class="btn btn-outline-success" id="heartSymptoms">Heart</button>
+              </div>
+              <br>
+              <div id="symptoms"></div>
+
+              <div class="alert" id="diabetesMessage" role="alert" hidden>
+              
+              </div>
+              <div class="alert" id="heartMessage" role="alert" hidden>
+              
+              </div>
+              <div>
+              <div>
+                <button id="loginToMetamask" class="btn btn-outline-success" disabled>Login to metamask</button>
+                <br>
+                <div class="alert alert-light" id="metamaskAddress" role="alert" hidden>
+              </div>
+              
+              <p></p>
+              <select id="hospitalDetails" class="form-select w-50" aria-label="Default select example" data-test-value='<%- JSON.stringify(hospitalInfo) %>' disabled>
+                <option value="" disabled selected>Select hospital...</option>
+              </select>
+        
+              <select id="doctorDetails" class="form-select w-50" hidden style="margin-top: 20px;"></select>
+        
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" data-dismiss="modal" id="saveChanges" disabled>Save changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+      </div>
 
       <br>
-      <button type="submit" id="submitDetails" class="btn btn-outline-success">Register</button>
-      <a href="/patient/login" style="position: absolute;right: 0;">Already Registered? Just Login</a>
+      <button type="submit" id="submitDetails" class="btn btn-success" disabled>Register</button>
+      <span style="position: absolute;right: 0;">
+        Already Registered? <a href="/patient/login" style="color: #198754;text-decoration:none"><b> Just Login</b></a>
+      </span> 
     </div>
 
   </body>

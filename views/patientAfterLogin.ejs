@@ -21,7 +21,6 @@
 
   <body>
     <%- include('partials/navbar') %>
-
     <div class="container" style="text-align: center; width: 75%;margin-top: 50px;">
       <div class="row">
         <div class="col">
@@ -40,120 +39,133 @@
       <input type="checkbox" id="allowSharing" <%= checked %>>Allow sharing of results
     </div>
    
-    <div class="row">
-      <div class="col-12">
-        <table id="diabetesContentTable" class="table ">
-          <thead class="thead-dark">  
-            <tr>
-              <td colspan="10" style="text-align:center;">
-                <b>Diabetes Data</b>
-              </td>
-            </tr>
-            <tr style="text-align:center;">
-              <th>Test no</th>
-              <th>Date and Time</th>
-              <th>Pregnancy</th>
-              <th>Glucose</th>
-              <th>Blood Pressure</th>
-              <th>Skin Thickness</th>
-              <th>Insulin</th>
-              <th>BMI</th>
-              <th>Pedigree Function</th>
-              <th>Test Diabetes</th>
-              <th>Try another model</th>
-            </tr>  
-          </thead> 
-
-          <% for (var i =0; i < diabetesData.length;  i++ ) { %>
-            <tr style="text-align:center;">
-              <td><%= i+1 %></td>
-              <% if(diabetesData[i].testTimings===""){ %>
-                <td><img src="/images/clock.png" alt="Yet to be done" class="clock"></td>
-              <% } else{ %>  
-                <td><%= diabetesData[i].testTimings %></td>
-              <% } %>
-              <td><%= diabetesData[i].testPregnancies %></td>
-              <td><%= diabetesData[i].testGlucose %></td>
-              <td><%= diabetesData[i].testBloodPressure %></td>
-              <td><%= diabetesData[i].testSkinThickness %></td>
-              <td><%= diabetesData[i].testInsulin %></td>
-              <td><%= diabetesData[i].testBMI %></td>
-              <td><%= diabetesData[i].testPedigreeFunction %></td>
-              <% if(diabetesData[i].testDiabetesResult!==null){ %>
-                <td><button class="btn btn-secondary testBtn" disabled>Test</button></td>
-              <% } else{ %>  
-                <td><button class="btn btn-success testBtn testDiabetesBtn" value="<%= diabetesData[i]._id %>">Test</button></td>
-              <% } %>
-              <td><button class="btn btn-success testBtn testDiabetesAnotherModelBtn" value="<%= diabetesData[i]._id %>">Test</button></td>
-            </tr>
-          <% } %>
-        </table>
+    <% if(diabetesData.length===0){ %>
+      <div class="alert alert-info" role="alert" style="text-align:center">
+        There are no diabetes records!
       </div>
-    </div>
+    <% } else{ %> 
+      <div class="row">
+        <div class="col-12">
+          <table id="diabetesContentTable" class="table ">
+            <thead class="thead-dark">  
+              <tr>
+                <td colspan="10" style="text-align:center;">
+                  <b>Diabetes Data</b>
+                </td>
+              </tr>
+              <tr style="text-align:center;">
+                <th>Test no</th>
+                <th>Date and Time</th>
+                <th>Pregnancy</th>
+                <th>Glucose</th>
+                <th>Blood Pressure</th>
+                <th>Skin Thickness</th>
+                <th>Insulin</th>
+                <th>BMI</th>
+                <th>Pedigree Function</th>
+                <th>Test Diabetes</th>
+                <!-- <th>Try another model</th> -->
+              </tr>  
+            </thead> 
+  
+            <% for (var i =0; i < diabetesData.length;  i++ ) { %>
+              <tr style="text-align:center;">
+                <td><%= i+1 %></td>
+                <% if(diabetesData[i].testTimings===""){ %>
+                  <td><img src="/images/clock.png" alt="Yet to be done" class="clock"></td>
+                <% } else{ %>  
+                  <td><%= diabetesData[i].testTimings %></td>
+                <% } %>
+                <td><%= diabetesData[i].testPregnancies %></td>
+                <td><%= diabetesData[i].testGlucose %></td>
+                <td><%= diabetesData[i].testBloodPressure %></td>
+                <td><%= diabetesData[i].testSkinThickness %></td>
+                <td><%= diabetesData[i].testInsulin %></td>
+                <td><%= diabetesData[i].testBMI %></td>
+                <td><%= diabetesData[i].testPedigreeFunction %></td>
+                <% if(diabetesData[i].testDiabetesResult!==null){ %>
+                  <td><button class="btn btn-secondary testBtn" disabled>Test</button></td>
+                <% } else{ %>  
+                  <td><button class="btn btn-success testBtn testDiabetesBtn" value="<%= diabetesData[i]._id %>">Test</button></td>
+                <% } %>
+                <!-- <td><button class="btn btn-success testBtn testDiabetesAnotherModelBtn" value="<%= diabetesData[i]._id %>">Test</button></td> -->
+              </tr>
+            <% } %>
+          </table>
+        </div>
+      </div> 
+    <% } %>
 
-    <div class="row">
-      <div class="col-12">
-        <table id="heartDataContentTable" class="table">
-          <thead class="thead-dark">  
-            <tr>
-              <td colspan="14" style="text-align:center;">
-                <b>Heart Test Data</b>
-              </td>
-            </tr>
-            <tr style="text-align:center;">
-              <th>Test no</th>
-              <th>Date and Time</th>
-              <th>Chest pain</th>
-              <th>Trestbps</th>
-              <th>Cholesterol</th>
-              <th>Fbs</th>
-              <th>Restecg</th>
-              <th>Thalach</th>
-              <th>Exang</th>
-              <th>Oldpeak</th>
-              <th>Slope</th>
-              <th>Ca</th>
-              <th>Thal</th>
-              <th>HeartDisease Test Result</th>
-            </tr>  
-          </thead>
-
-          <% for (var i =0; i < heartData.length;  i++ ) { %>
-            <tr style="text-align:center;">
-              <td><%= i+1 %></td>
-              <% if(heartData[i].testTimings===""){ %>
-                <td><img src="/images/clock.png" alt="Yet to be done" class="clock"></td>
-              <% } else{ %>  
-                <td><%= heartData[i].testTimings %></td>
-              <% } %>
-              <td><%= heartData[i].cp %></td>
-              <td><%= heartData[i].trestbps %></td>
-              <td><%= heartData[i].chol %></td>
-              <td><%= heartData[i].fbs %></td>
-              <td><%= heartData[i].restecg %></td>
-              <td><%= heartData[i].thalach %></td>
-              <td><%= heartData[i].exang %></td>
-              <td><%= heartData[i].oldpeak %></td>
-              <td><%= heartData[i].slope %></td>
-              <td><%= heartData[i].ca %></td>
-              <td><%= heartData[i].thal %></td>
-              <% if(heartData[i].testHeartResult!==null){ %>
-                <td><button class="btn btn-secondary testBtn" disabled>Test</button></td>
-              <% } else{ %>
-                <td><button class="btn btn-success testBtn testHeartBtn" value="<%= heartData[i]._id %>">Test</button></td>
-              <% } %>
-            </tr>
-          
-          <% } %>
-        </table>
+    <% if(heartData.length===0){ %>
+      <div class="alert alert-info" role="alert" style="text-align:center">
+        There are no heart records!
       </div>
-    </div>
-
+    <% } else{ %> 
+      <div class="row">
+        <div class="col-12">
+          <table id="heartDataContentTable" class="table">
+            <thead class="thead-dark">  
+              <tr>
+                <td colspan="14" style="text-align:center;">
+                  <b>Heart Test Data</b>
+                </td>
+              </tr>
+              <tr style="text-align:center;">
+                <th>Test no</th>
+                <th>Date and Time</th>
+                <th>Chest pain</th>
+                <th>Trestbps</th>
+                <th>Cholesterol</th>
+                <th>Fbs</th>
+                <th>Restecg</th>
+                <th>Thalach</th>
+                <th>Exang</th>
+                <th>Oldpeak</th>
+                <th>Slope</th>
+                <th>Ca</th>
+                <th>Thal</th>
+                <th>HeartDisease Test Result</th>
+              </tr>  
+            </thead>
+  
+            <% for (var i =0; i < heartData.length;  i++ ) { %>
+              <tr style="text-align:center;">
+                <td><%= i+1 %></td>
+                <% if(heartData[i].testTimings===""){ %>
+                  <td><img src="/images/clock.png" alt="Yet to be done" class="clock"></td>
+                <% } else{ %>  
+                  <td><%= heartData[i].testTimings %></td>
+                <% } %>
+                <td><%= heartData[i].cp %></td>
+                <td><%= heartData[i].trestbps %></td>
+                <td><%= heartData[i].chol %></td>
+                <td><%= heartData[i].fbs %></td>
+                <td><%= heartData[i].restecg %></td>
+                <td><%= heartData[i].thalach %></td>
+                <td><%= heartData[i].exang %></td>
+                <td><%= heartData[i].oldpeak %></td>
+                <td><%= heartData[i].slope %></td>
+                <td><%= heartData[i].ca %></td>
+                <td><%= heartData[i].thal %></td>
+                <% if(heartData[i].testHeartResult!==null){ %>
+                  <td><button class="btn btn-secondary testBtn" disabled>Test</button></td>
+                <% } else{ %>
+                  <td><button class="btn btn-success testBtn testHeartBtn" value="<%= heartData[i]._id %>">Test</button></td>
+                <% } %>
+              </tr>
+            
+            <% } %>
+          </table>
+        </div>
+      </div>
+    <% } %>
+    <i class="fa-solid fa-left-long-to-line"></i>
     <div class="modal fade bd-example-modal-lg loader" data-backdrop="static" data-keyboard="false" tabindex="-1">
       <div class="modal-dialog modal-sm loadingModal">
           <div class="modal-content loadingContent">
-              <span class="fa fa-spinner fa-spin fa-3x"></span>
-              <p>Please wait while we are testing your data!!</p>
+              <span class="fa fa-spinner fa-spin fa-3x" style="color: skyblue;"></span>
+              
+              <div class="alert alert-info" role="alert">Please wait while we are testing your data!!</div>
           </div>
       </div>
     </div>
