@@ -533,39 +533,55 @@ app.post("/patient/:id/compareBCandMongoDiabetesData",(req,res)=>{
   const bcResult=req.body.result;
   console.log("Blockchain length : " + bcResult.length);
   Patient.findOne({_id:req.params.id},(err,found)=>{
-    console.log(found.testDiabetesData.length);
+    var msg="";
     found.testDiabetesData.forEach(function(data,i) {
       if(i<bcResult.length && (data._id.toString()!==bcResult[i][0] || md5(data)!==bcResult[i][1])){
-        res.status(400).json({"msg":"Data integrity compromised!!"})
+        msg="Data integrity compromised!!";
       }
     });
-    res.status(200).json({data:found.testDiabetesData.slice(0,bcResult.length)})
+    if(msg===""){
+      res.status(200).json({data:found.testDiabetesData.slice(0,bcResult.length)})
+    }
+    else{
+      res.status(400).json({"msg":msg})
+    }
   })
 })
 
 app.post("/patient/:id/compareBCandMongoHeartData",(req,res)=>{
   const bcResult=req.body.result;
   Patient.findOne({_id:req.params.id},(err,found)=>{
+    var msg="";
     found.testHeartData.forEach(function(data,i) {
       if(i<bcResult.length && (data._id.toString()!==bcResult[i][0] || md5(data)!==bcResult[i][1])){
-        res.status(400).json({"msg":"Data integrity compromised!!"})
+        msg="Data integrity compromised!!"
       }
     });
-    res.status(200).json({data:found.testHeartData.slice(0,bcResult.length)})
+    if(msg===""){
+      res.status(200).json({data:found.testHeartData.slice(0,bcResult.length)})
+    }
+    else{
+      res.status(400).json({"msg":msg})
+    }
   })
 })
-
 
 app.post("/doctor/compareBCandMongoDiabetesData/doctorDisplay",(req,res)=>{
   const bcResult=req.body.result;
   Patient.findOne({patientPublicAddress:req.body.patientPublicAddress},(err,found)=>{
     if(found.allowSharing){
+      var msg="";
       found.testDiabetesData.forEach(function(data,i) {
         if(i<bcResult.length && (data._id.toString()!==bcResult[i][0] || md5(data)!==bcResult[i][1])){
-          res.status(400).json({"msg":"Data integrity compromised!!"})
+          msg="Data integrity compromised!!"
         }
       });
-      res.status(200).json({data:found.testDiabetesData.slice(0,bcResult.length)})
+      if(msg===""){
+        res.status(200).json({data:found.testDiabetesData.slice(0,bcResult.length)})
+      }
+      else{
+        res.status(400).json({"msg":msg})
+      }
     }
     else{
       res.status(400).json({"msg":"You have no access to this Patient's Diabetes data"});
@@ -577,12 +593,18 @@ app.post("/doctor/compareBCandMongoHeartData/doctorDisplay",(req,res)=>{
   const bcResult=req.body.result;
   Patient.findOne({patientPublicAddress:req.body.patientPublicAddress},(err,found)=>{
     if(found.allowSharing){
+      var msg="";
       found.testHeartData.forEach(function(data,i) {
         if(i<bcResult.length && (data._id.toString()!==bcResult[i][0] || md5(data)!==bcResult[i][1])){
-          res.status(400).json({"msg":"Data integrity compromised!!"})
+          msg="Data integrity compromised!!";
         }
       });
-      res.status(200).json({data:found.testHeartData.slice(0,bcResult.length)})
+      if(msg===""){
+        res.status(200).json({data:found.testHeartData.slice(0,bcResult.length)})
+      }
+      else{
+        res.status(400).json({"msg":msg})
+      }
     }
     else{
       res.status(400).json({"msg":"You have no access to this Patient's Heart data"});

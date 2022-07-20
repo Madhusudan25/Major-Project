@@ -191,7 +191,8 @@ $("#showHeartDatabtn").click(()=>{
   });
 })
 
-$("#allowSharing").change(()=>{
+$("#allowSharing").click(()=>{
+    console.log("Clicked");
       $.ajax({
         url: window.location.pathname+"/toggleSharing",
         type: "patch",
@@ -231,6 +232,13 @@ function fillDiabetesTestData(diabetesDetails) {
     </thead> 
   `)
   diabetesDetails.forEach((detail,i) => {
+    var result="";
+    if(detail.testDiabetesResult===0){
+      result='<button class="btn btn-success" style="background-color: #198754;">Negative</button>'
+    }
+    else{
+      result='<button class="btn btn-danger" style="background-color: #bb2d3b;">Positive</button>'
+    }
     $("#diabetesContentTable").append(`
     <tr style="text-align:center;">
         <td>${i+1}</td>
@@ -242,7 +250,7 @@ function fillDiabetesTestData(diabetesDetails) {
         <td>${detail.testInsulin}</td>
         <td>${detail.testBMI}</td>
         <td>${detail.testPedigreeFunction}</td>
-        <td>${detail.testDiabetesResult}</td>
+        <td>${result}</td>
     </tr>
   `)
   });
@@ -282,6 +290,13 @@ function fillHeartTestData(heartDetails){
     </thead> 
   `)
   heartDetails.forEach((detail,i) => {
+    var result="";
+    if(detail.testHeartResult===0){
+      result='<button class="btn btn-success" style="background-color: #198754;">Negative</button>'
+    }
+    else{
+      result='<button class="btn btn-danger" style="background-color: #bb2d3b;">Positive</button>'
+    }
     $("#heartDataContentTable").append(`
     <tr style="text-align:center;">
         <td>${i+1}</td>
@@ -297,7 +312,7 @@ function fillHeartTestData(heartDetails){
         <td>${detail.slope}</td>
         <td>${detail.ca}</td>
         <td>${detail.thal}</td>
-        <td>${detail.testHeartResult}</td>
+        <td>${result}</td>
     </tr>
   `)
   });
