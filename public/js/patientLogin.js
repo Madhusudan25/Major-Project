@@ -13,6 +13,10 @@ function verifyAccount() {
     address: window.ethereum.selectedAddress
   }
 
+  if(data.password===""||data.address===""){
+    alert("Please enter all the details")
+    return
+  }
   $.ajax({
     url: "/patient/login",
     type: "post",

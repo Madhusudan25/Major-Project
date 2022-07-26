@@ -4,6 +4,14 @@ $("#register").click(()=>{
         password:$("#password").val()
     }
 
+    if(data.username==="" || data.password===""){
+        alert("Please enter all the details!");
+        return;
+    }
+    if(!data.username.match(".*@gmail.com")){
+        alert("Please enter valid gmail id!");
+        return;
+    }
     $.ajax({
         url: "/technician/register",
         type: "post",

@@ -66,6 +66,19 @@ function verifyAccount() {
     doctorId:doctorID
   }
 
+  if(data.patientName ==="" ||
+    data.phoneNo ==="" ||
+    data.age === ""||
+    data.sex ==="" ||
+    data.password ==="" ||
+    data.address ==="" ||
+    data.hospitalId ==="" ||
+    data.doctorId ===""
+  ){
+    alert("Please enter all the details!")
+    return
+  }
+  
   console.log(data);
   
   $.ajax({

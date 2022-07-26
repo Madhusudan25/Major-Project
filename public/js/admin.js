@@ -41,6 +41,12 @@ $("#addDoctor").click(function (e) {
     hospitalPublicAddress: window.ethereum.selectedAddress,
   };
 
+  if(
+    doctorData.doctorName===""||doctorData.publicAddress===""
+  ){
+    alert("Please fill all the fields!!");
+    return
+  }
   $.ajax({
     url: "/admin/addDoctor",
     type: "post",

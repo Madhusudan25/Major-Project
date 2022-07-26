@@ -21,7 +21,14 @@ $(window).load(()=>{
     userData.forEach((data,i) => {
       disabledDiabetes = isTestedDiabetes[i]==="true"?"":"disabled";
       disabledHeart=isTestedHeart[i]==="true"?"":"disabled";
-
+      var pregnancies;
+      var disabled=""
+      if(data.patientSex==="Male" || data.patientSex==="male"){
+        pregnancies=0;
+      }
+      if(pregnancies===0){
+        disabled="disabled";
+      }
       $("#accordionFlushExample").append(
         `<div class="accordion-item">
         <h2 class="accordion-header" id="patientId-${data._id}">
@@ -46,7 +53,7 @@ $(window).load(()=>{
               </div>
               <label for="testPregnancies-${data._id}" class="form-label">Pregnancies</label>
               <div class="input-group mb-2 mr-sm-2">
-                <input class="form-control rounded diabetesClear" type="number" name="testPregnancies" id="testPregnancies-${data._id}" placeholder="Pregnancies">
+                <input class="form-control rounded diabetesClear" type="number" name="testPregnancies" id="testPregnancies-${data._id}" placeholder="Pregnancies" value=${pregnancies} ${disabled}>
                 <div class="input-group-prepend">
                     <div class="input-group-text rounded-circle" data-toggle="tooltip" data-placement="top" title="Pregnancies"><i class="fa-solid fa-info"></i></div>
                   </div>
@@ -225,7 +232,14 @@ $("body").on ("click", ".fillDiabetesData", function(e){
         testBMI:$("#testBMI-"+data).val(),
         testPedigreeFunction:$("#testPedigreeFunction-"+data).val(),
         testDiabetesResult:""
-    }   
+    } 
+    
+    if(diabetesData.testAge===""||diabetesData.testPregnancies===""||diabetesData.testGlucose==="" || diabetesData.testBloodPressure===""||
+    diabetesData.testSkinThickness===""||diabetesData.testInsulin===""||diabetesData.testBMI===""||diabetesData.testPedigreeFunction==="")
+    {
+      alert("Please fill all the fields!!");
+      return
+    }
 
     $.ajax({
         url: "/technician/diabetes",
@@ -259,6 +273,26 @@ $("body").on ("click", ".fillHeartData", function(e){
         ca:$("#ca-"+data).val(),
         thal:$("#thal-"+data).val(),
         testHeartResult:""
+    }
+
+    if(
+      heartData.testAgeHeart==="" ||
+      heartData.sex==="" ||
+      heartData.cp==="" ||
+      heartData.trestbps==="" ||
+      heartData.chol==="" ||
+      heartData.fbs==="" ||
+      heartData.restecg==="" ||
+      heartData.thalach==="" ||
+      heartData.exang==="" ||
+      heartData.oldpeak==="" ||
+      heartData.slope==="" ||
+      heartData.ca==="" ||
+      heartData.thal===""
+    )
+    {
+      alert("Please fill all the fields!!");
+      return
     }
 
     $.ajax({
